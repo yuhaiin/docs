@@ -1,26 +1,31 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
 	integrations: [
 		starlight({
-			title: 'My Docs',
+			title: 'Yuhaiin Docs',
+			favicon: './favicon.ico',
+			logo: {
+				src: './favicon.ico',
+			},
 			social: {
-				github: 'https://github.com/withastro/starlight',
+				github: 'https://github.com/yuhaiin/yuhaiin',
 			},
 			sidebar: [
 				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
+					label: 'Start',
+					autogenerate: { directory: 'guides' },
 				},
 				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
+					label: 'Protocol',
+					autogenerate: { directory: 'protocol' },
+				},
+				{
+					label: 'Bypass',
+					autogenerate: { directory: 'bypass' }
 				},
 			],
 		}),

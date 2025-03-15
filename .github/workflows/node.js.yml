@@ -1,0 +1,52 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [23.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - run: npm install --force
+
+      - run: npm run build
+        env:
+          CI: false
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        if: github.event_name != 'pull_request'
+        with:
+          personal_token: ${{ secrets.PERSONAL_TOKEN }}
+          publish_dir: ./dist
+          external_repository: yuhaiin/yuhaiin.github.io
+          publish_branch: main # default: gh-pages
+          enable_jekyll: false
+          destination_dir: documents
+
+      - name: upload_static
+        uses: actions/upload-artifact@v4
+        with:
+          name: statics
+          path: |
+            dist
