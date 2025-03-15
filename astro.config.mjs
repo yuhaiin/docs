@@ -7,9 +7,9 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'Yuhaiin Docs',
-			favicon: './favicon.ico',
+			favicon: './public/favicon.ico',
 			logo: {
-				src: './favicon.ico',
+				src: './public/favicon.ico',
 			},
 			social: {
 				github: 'https://github.com/yuhaiin/yuhaiin',
@@ -27,6 +27,18 @@ export default defineConfig({
 					label: 'Bypass',
 					autogenerate: { directory: 'bypass' }
 				},
+				{
+					label: "Resolver",
+					autogenerate: { directory: 'resolver' }
+				},
+				{
+					label: "Sniff",
+					autogenerate: { directory: 'sniff' }
+				},
+				{
+					label: "Latency",
+					autogenerate: { directory: 'latency' }
+				}
 			],
 		}),
 	],
