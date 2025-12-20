@@ -1,5 +1,5 @@
 ---
-title: Transport: QUIC
+title: QUIC
 ---
 
 > [!NOTE]
