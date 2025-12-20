@@ -1,5 +1,5 @@
 ---
-title: Transport: gRPC
+title: gRPC
 ---
 
 > [!NOTE]

@@ -1,5 +1,5 @@
 ---
-title: Transport: HTTP/2
+title: HTTP/2
 ---
 
 > [!NOTE]

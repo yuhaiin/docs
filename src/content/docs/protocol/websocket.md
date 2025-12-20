@@ -1,5 +1,5 @@
 ---
-title: Transport: WebSocket
+title: WebSocket
 ---
 
 > [!NOTE]

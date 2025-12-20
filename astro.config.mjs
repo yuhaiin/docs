@@ -11,9 +11,13 @@ export default defineConfig({
 			logo: {
 				src: './public/favicon.ico',
 			},
-			social: {
-				github: 'https://github.com/yuhaiin/yuhaiin',
-			},
+			social: [
+				{
+					icon:"github",
+					label:"Github",
+					href: 'https://github.com/yuhaiin/yuhaiin',
+				}
+		],
 			sidebar: [
 				{
 					label: 'Start',
