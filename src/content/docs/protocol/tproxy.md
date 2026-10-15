@@ -1,6 +1,6 @@
 ---
-title: TPROXY
-description: inbound: current Yuhaiin support and configuration.
+title: "TPROXY"
+description: "inbound: current Yuhaiin support and configuration."
 ---
 
 Linux transparent proxying (TPROXY) can intercept packets while retaining original destination metadata. It requires policy routing and firewall rules in addition to Yuhaiin.

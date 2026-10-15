@@ -1,6 +1,6 @@
 ---
-title: Drop
-description: outbound step: current Yuhaiin support and configuration.
+title: "Drop"
+description: "outbound step: current Yuhaiin support and configuration."
 ---
 
 Drop is a terminal behavior for traffic. For ordinary domain blocking, the UI's Block routing action is easier to review and audit.

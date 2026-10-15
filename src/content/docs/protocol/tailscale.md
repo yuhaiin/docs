@@ -1,6 +1,6 @@
 ---
-title: Tailscale outbound
-description: outbound: current Yuhaiin support and configuration.
+title: "Tailscale outbound"
+description: "outbound: current Yuhaiin support and configuration."
 ---
 
 Tailscale combines WireGuard-based networking with a tailnet control plane. Yuhaiin's Tailscale outbound uses its own authentication and network settings.

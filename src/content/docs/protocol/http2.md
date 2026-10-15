@@ -1,6 +1,6 @@
 ---
-title: HTTP/2 transport
-description: outbound step and inbound transport: current Yuhaiin support and configuration.
+title: "HTTP/2 transport"
+description: "outbound step and inbound transport: current Yuhaiin support and configuration."
 ---
 
 HTTP/2 framing and multiplexing are optional transport layers, not the same as an ordinary HTTP CONNECT proxy.

@@ -1,6 +1,6 @@
 ---
-title: Mixed HTTP/SOCKS listener
-description: inbound: current Yuhaiin support and configuration.
+title: "Mixed HTTP/SOCKS listener"
+description: "inbound: current Yuhaiin support and configuration."
 ---
 
 The **Mixed** protocol accepts both HTTP proxy and SOCKS5 clients on a single listening port. This is the default beginner-friendly Local and LAN preset.

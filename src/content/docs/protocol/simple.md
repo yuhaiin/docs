@@ -1,6 +1,6 @@
 ---
-title: Simple dialer
-description: outbound chain step: current Yuhaiin support and configuration.
+title: "Simple dialer"
+description: "outbound chain step: current Yuhaiin support and configuration."
 ---
 
 The `simple` step chooses where a connection is dialed. It does not itself provide a proxy protocol, encryption or VPN identity.

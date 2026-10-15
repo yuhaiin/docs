@@ -1,6 +1,6 @@
 ---
-title: Transparent REDIR
-description: inbound: current Yuhaiin support and configuration.
+title: "Transparent REDIR"
+description: "inbound: current Yuhaiin support and configuration."
 ---
 
 A REDIR inbound receives traffic redirected by operating-system firewall rules. It is an advanced alternative to explicitly configuring HTTP/SOCKS proxy clients.

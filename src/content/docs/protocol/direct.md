@@ -1,6 +1,6 @@
 ---
-title: Direct
-description: outbound: current Yuhaiin support and configuration.
+title: "Direct"
+description: "outbound: current Yuhaiin support and configuration."
 ---
 
 A Direct node lets Yuhaiin open network connections using the host's ordinary internet access. It is the easiest destination to test before configuring a remote proxy.

@@ -1,6 +1,6 @@
 ---
-title: AEAD layer
-description: outbound step and inbound transport: current Yuhaiin support and configuration.
+title: "AEAD layer"
+description: "outbound step and inbound transport: current Yuhaiin support and configuration."
 ---
 
 AEAD stands for authenticated encryption with associated data. In Yuhaiin it is an optional authenticated encryption layer layered over an existing connection.

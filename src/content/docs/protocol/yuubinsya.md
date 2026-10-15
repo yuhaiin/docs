@@ -1,6 +1,6 @@
 ---
-title: Yuubinsya
-description: inbound and outbound: current Yuhaiin support and configuration.
+title: "Yuubinsya"
+description: "inbound and outbound: current Yuhaiin support and configuration."
 ---
 
 Yuubinsya is a Yuhaiin-specific client/server proxy protocol. Use it only with a compatible endpoint; HTTP/SOCKS clients cannot speak Yuubinsya directly.

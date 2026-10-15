@@ -1,6 +1,6 @@
 ---
-title: Reverse HTTP/TCP
-description: inbound types: current Yuhaiin support and configuration.
+title: "Reverse HTTP/TCP"
+description: "inbound types: current Yuhaiin support and configuration."
 ---
 
 Reverse HTTP and reverse TCP inbounds support specialized reverse connection topologies. They are separate variants rather than a generic automatic port forwarding switch.

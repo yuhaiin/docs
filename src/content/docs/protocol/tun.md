@@ -1,6 +1,6 @@
 ---
-title: TUN interface
-description: inbound: current Yuhaiin support and configuration.
+title: "TUN interface"
+description: "inbound: current Yuhaiin support and configuration."
 ---
 
 A TUN inbound reads IP packets from an operating-system virtual interface. Applications need not support application proxy settings when their traffic is routed through that interface.
