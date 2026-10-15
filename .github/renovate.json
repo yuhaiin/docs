@@ -1,14 +1,14 @@
 {
-    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": [
-        "config:recommended",
-        ":dependencyDashboard",
-        ":semanticPrefixFixDepsChoreOthers",
-        ":prHourlyLimitNone",
-        ":prConcurrentLimitNone",
-        ":ignoreModulesAndTests",
-        "group:allNonMajor",
-        "replacements:all",
-        "workarounds:all"
-    ]
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    "group:allNonMajor"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["npm"],
+      "groupName": "Astro documentation dependencies"
+    }
+  ]
 }
