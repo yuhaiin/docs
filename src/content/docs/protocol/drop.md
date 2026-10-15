@@ -1,3 +1,26 @@
 ---
 title: Drop
+description: A low-level endpoint that drops traffic.
 ---
+
+A low-level endpoint that drops traffic.
+
+## Support and purpose
+
+**Current contract:** outbound step. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+
+## What to configure
+
+If the goal is to block traffic by domain, prefer a Block routing rule and examine Blocked history; do not rely on an undocumented chain of drop steps.
+
+For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+
+An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+
+Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+
+## Further information
+
+- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/drop)
+- [Node and subscription guide](/documents/features/nodes/)
+- [Supported VPN outbounds](/documents/reference/vpn-protocols/)

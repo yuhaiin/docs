@@ -1,54 +1,26 @@
 ---
 title: VLESS
+description: A V2Ray-family proxy protocol often combined with TLS or REALITY.
 ---
 
-VLESS is a lightweight, simplified version of VMess. It does not include its own encryption layer and relies on the transport layer (typically TLS) for security.
+A V2Ray-family proxy protocol often combined with TLS or REALITY.
 
-## Network Support
+## Support and purpose
 
-- **TCP**: Supported natively.
-- **UDP**: Supported via **UDP over Stream**.
-    - **NAT Type**: **Symmetric NAT**. Similar to VMess, the current implementation maps one session to one remote destination.
+**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
 
-### Configuration
+## What to configure
 
-VLESS configuration is very minimal:
+VLESS has no general-purpose built-in encryption. Use the exact compatible security and transport arrangement from your provider.
 
-*   **Address**: The IP or hostname of the server.
-*   **Port**: The server port.
-*   **UUID**: Your unique user ID for authentication.
+For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
 
-### Example Configuration
+An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
 
-```json
-{
-  "name": "My VLESS Server",
-  "protocols": [
-    {
-      "simple": {
-        "host": "vless.example.com",
-        "port": 443
-      }
-    },
-    {
-      "tls": {
-        "enable": true,
-        "servernames": ["vless.example.com"]
-      }
-    },
-    {
-      "vless": {
-        "uuid": "YOUR-UUID-HERE"
-      }
-    }
-  ]
-}
-```
+Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
 
-### Developer Details
+## Further information
 
-#### Implementation
-VLESS in `yuhaiin` is implemented as a thin wrapper. Since it has no internal encryption, it **must** be used with TLS or another secure transport to protect the traffic and the UUID.
-
-#### Protocol Structure
-VLESS sends a 1-byte version (0), followed by the 16-byte UUID, a 1-byte command (1 for TCP, 2 for UDP), and then the destination address and port.
+- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/vless)
+- [Node and subscription guide](/documents/features/nodes/)
+- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
