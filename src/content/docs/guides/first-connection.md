@@ -3,7 +3,7 @@ title: Your first connection
 description: Set up a working direct node and local proxy without networking expertise.
 ---
 
-This example uses a **Direct** node, so it does not require a paid proxy subscription or a remote server. It checks that Yuhaiin is receiving traffic. Later you can replace Direct with your own proxy node.
+This example uses a **Direct** node, so it does not require a paid proxy subscription or a remote server. It checks that Yuhaiin is receiving traffic. **For a clean backend installation, reuse the enabled Mixed inbound on `127.0.0.1:1080`; you do not need to create an inbound first.** Later you can replace Direct with your own proxy node.
 
 ## Before you begin
 
