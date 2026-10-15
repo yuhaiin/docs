@@ -18,3 +18,11 @@ Open **Settings → Configuration** for application settings. Some changes affec
 The backend manages HTTP APIs and the Web UI on the same configured HTTP listener. Its current CLI default listens on `0.0.0.0:50051`. For a personal computer use `-host 127.0.0.1:50051` unless remote access is intentionally configured.
 
 See [Security](/documents/guides/security/) and [Installation](/documents/guides/install/). For developer-facing data structures, consult the [Configuration reference](/documents/reference/configuration/).
+
+## System proxy and manual network interface
+
+The **Configuration** page includes HTTP and SOCKS5 system proxy integration, optional manual outgoing network interface, IPv6, log level and other controls. Leave interface selection automatic until a specific problem requires it. See [System proxy versus TUN](/documents/features/system-proxy/) and [Network recovery](/documents/guides/recover-network/).
+
+## Runtime profiling
+
+The **Enable pprof** setting allows CPU, heap and goroutine captures. Enable only when investigating resource usage. [Profiler instructions](/documents/features/pprof/) explain sessions and the browser graph viewer.

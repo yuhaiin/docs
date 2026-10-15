@@ -31,3 +31,7 @@ Not necessarily. For OpenVPN and GlobalProtect, server-advertised DNS and routes
 Use the VPN type provided by your server operator. There is no generic server address/password pair that works across these protocols. Server-side certificate and authentication policies matter. Do not disable TLS verification just to force a connection.
 
 For exact compatibility notes, consult the implementation READMEs and interop tests under [pkg/net/proxy](https://github.com/yuhaiin/yuhaiin/tree/main/pkg/net/proxy), and use the [Node editor](/documents/features/nodes/) for supported fields.
+
+## Configuration examples and limits
+
+Open each dedicated page for the typed node fields, unsupported features and a diagnostic checklist: [OpenVPN](/documents/protocol/openvpn/), [GlobalProtect](/documents/protocol/globalprotect/), [SoftEther](/documents/protocol/softether/), [WireGuard](/documents/protocol/wireguard/), [AmneziaWG](/documents/protocol/amneziawg/), [IKEv2](/documents/protocol/ikev2/), [AnyConnect](/documents/protocol/anyconnect/), [SSTP](/documents/protocol/sstp/), [Fortinet](/documents/protocol/fortinet/), [L2TP](/documents/protocol/l2tp/) and [L2TPv3](/documents/protocol/l2tpv3/). Also see [compatibility limits](/documents/reference/compatibility/).

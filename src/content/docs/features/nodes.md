@@ -31,3 +31,11 @@ The frontend also exposes explicit Shadowsocks, ShadowsocksR, VMess and Trojan s
 ## Advanced VPN outbounds
 
 The backend also includes WireGuard, AmneziaWG, Hysteria 2, OpenVPN, GlobalProtect, IKEv2, AnyConnect, SSTP, Fortinet, SoftEther and L2TP variants. Support is implementation-specific; for example GlobalProtect does not support SAML/SSO or portal discovery, and OpenVPN does not import `.ovpn` files from the node editor. See [VPN protocols](/documents/reference/vpn-protocols/).
+
+## Publish profiles and manage active sessions
+
+**Destinations → Publish** lets you share selected nodes through a published subscription configuration. Because profiles can contain credentials, read [Publishing and security](/documents/features/publishing/) before exposing it.
+
+**Destinations → Active nodes** lists currently running outbound sessions, not all saved profiles. You can terminate a stuck instance without deleting its configuration. See [Active outbound nodes](/documents/features/active-nodes/).
+
+For initial setup from a subscription URL, follow [Import a provider subscription](/documents/guides/subscription/).

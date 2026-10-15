@@ -12,6 +12,10 @@ Yuhaiin can direct an application's internet connections through a proxy server,
 3. [Choose how applications connect](/documents/guides/local-proxy/). Enable a local app proxy or, if needed, a system-wide TUN.
 4. [Check your connection](/documents/guides/troubleshooting/) when something does not work.
 
+For a platform-specific walkthrough, use [Windows](/documents/guides/windows/), [macOS](/documents/guides/macos/) or [Linux](/documents/guides/linux/). Follow [Importing a subscription](/documents/guides/subscription/) if a provider gave you a URL instead of individual node settings.
+
+To route different websites differently, follow [Selective routing](/documents/guides/selective-routing/). If an OS proxy or TUN setting breaks connectivity, use [Network recovery](/documents/guides/recover-network/).
+
 **Using Android?** See the [Android guide](/documents/guides/android/) for the separate mobile app.
 
 ## Three words you will see

@@ -26,3 +26,7 @@ The sidebar includes **History**, **Failed history**, and **Blocked history**. U
 **Diagnostics → pprof** is for performance profiling, not normal connectivity troubleshooting. CPU and heap profiles, charts and graphs are primarily for developers investigating resource use; profiling may add overhead. Do not publish unreviewed profiles from a device holding sensitive data.
 
 For a systematic check across DNS, routes and outbounds, use [Network diagnostics](/documents/features/diagnostics/).
+
+## Active outbound sessions
+
+For long-lived VPN or multiplexed connections, [Active outbound nodes](/documents/features/active-nodes/) shows running instances. Closing a session does not erase the node; the next traffic may reconnect.
