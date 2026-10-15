@@ -1,6 +1,6 @@
 ---
-title: AnyConnect
-description: VPN outbound: configuration fields, example, limits and testing.
+title: "AnyConnect"
+description: "VPN outbound: configuration fields, example, limits and testing."
 ---
 
 This outbound uses a compatible AnyConnect XML login and **CSTP over TLS**. When offered by the gateway and permitted by the network, it can use a DTLS data channel.

@@ -1,6 +1,6 @@
 ---
-title: WireGuard
-description: VPN outbound: configuration fields, example, limits and testing.
+title: "WireGuard"
+description: "VPN outbound: configuration fields, example, limits and testing."
 ---
 
 WireGuard creates an encrypted IP tunnel between a local key and one or more remote peers. The Yuhaiin implementation uses a userspace stack for application traffic.

@@ -1,6 +1,6 @@
 ---
-title: L2TPv3 pseudowire
-description: Advanced unencrypted VPN outbound: configuration fields, example, limits and testing.
+title: "L2TPv3 pseudowire"
+description: "Advanced unencrypted VPN outbound: configuration fields, example, limits and testing."
 ---
 
 L2TPv3 transports Ethernet frames over UDP and exposes a userspace network stack for upper-layer traffic. It is for operators with a compatible remote pseudowire endpoint.

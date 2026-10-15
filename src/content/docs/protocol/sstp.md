@@ -1,6 +1,6 @@
 ---
-title: SSTP
-description: VPN outbound: configuration fields, example, limits and testing.
+title: "SSTP"
+description: "VPN outbound: configuration fields, example, limits and testing."
 ---
 
 SSTP carries PPP over a TLS connection and uses MS-CHAPv2 authentication. In Yuhaiin it is an outbound node backed by the userspace IP stack.

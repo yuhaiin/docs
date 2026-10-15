@@ -1,6 +1,6 @@
 ---
-title: Fortinet SSL VPN
-description: VPN outbound: configuration fields, example, limits and testing.
+title: "Fortinet SSL VPN"
+description: "VPN outbound: configuration fields, example, limits and testing."
 ---
 
 This outbound logs into a compatible Fortinet SSL-VPN tunnel-mode gateway over HTTPS. Data runs over TLS and may move to DTLS when supported.

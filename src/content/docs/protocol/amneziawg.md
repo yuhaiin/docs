@@ -1,6 +1,6 @@
 ---
-title: AmneziaWG
-description: VPN outbound: configuration fields, example, limits and testing.
+title: "AmneziaWG"
+description: "VPN outbound: configuration fields, example, limits and testing."
 ---
 
 AmneziaWG v3 uses the official `amneziawg-go` userspace engine integrated into Yuhaiin's in-process IP stack. Its obfuscation settings must match those on the peer.

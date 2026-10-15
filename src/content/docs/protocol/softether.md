@@ -1,6 +1,6 @@
 ---
-title: SoftEther native SSL-VPN
-description: Experimental VPN outbound: configuration fields, example, limits and testing.
+title: "SoftEther native SSL-VPN"
+description: "Experimental VPN outbound: configuration fields, example, limits and testing."
 ---
 
 This is a client for the **native SoftEther SSL-VPN protocol**, not for SoftEther Server's separately supported SSTP and OpenVPN compatibility modes. It uses a userspace network stack without creating a host TAP device.

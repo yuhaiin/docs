@@ -1,6 +1,6 @@
 ---
-title: IKEv2 / IPsec
-description: VPN outbound: configuration fields, example, limits and testing.
+title: "IKEv2 / IPsec"
+description: "VPN outbound: configuration fields, example, limits and testing."
 ---
 
 Yuhaiin's IKEv2 outbound negotiates an IPsec tunnel, transporting application TCP/UDP through the in-process ESP stack. It does not require a host OS VPN connection.

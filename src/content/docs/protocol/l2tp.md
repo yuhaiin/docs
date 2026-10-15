@@ -1,6 +1,6 @@
 ---
-title: L2TPv2
-description: Unencrypted VPN outbound: configuration fields, example, limits and testing.
+title: "L2TPv2"
+description: "Unencrypted VPN outbound: configuration fields, example, limits and testing."
 ---
 
 This client runs L2TPv2 over UDP and negotiates PPP. It is intended for compatible networks where the required encryption, if any, is provided separately.

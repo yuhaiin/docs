@@ -1,6 +1,6 @@
 ---
-title: Hysteria 2
-description: QUIC proxy inbound and outbound: configuration fields, example, limits and testing.
+title: "Hysteria 2"
+description: "QUIC proxy inbound and outbound: configuration fields, example, limits and testing."
 ---
 
 Hysteria 2 uses QUIC over UDP with authentication and encrypted transport. Yuhaiin supports it as an outgoing node and as a server-side inbound.

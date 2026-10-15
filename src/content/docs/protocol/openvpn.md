@@ -1,6 +1,6 @@
 ---
-title: OpenVPN
-description: VPN outbound: configuration fields, example, limits and testing.
+title: "OpenVPN"
+description: "VPN outbound: configuration fields, example, limits and testing."
 ---
 
 This is a native, in-process OpenVPN **client outbound**. It does not launch an external OpenVPN application or create a host TUN interface. The client uses Yuhaiin's in-process IP stack to carry application TCP and UDP.

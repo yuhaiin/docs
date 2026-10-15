@@ -1,6 +1,6 @@
 ---
-title: GlobalProtect
-description: Experimental VPN outbound: configuration fields, example, limits and testing.
+title: "GlobalProtect"
+description: "Experimental VPN outbound: configuration fields, example, limits and testing."
 ---
 
 This client connects to a **GlobalProtect gateway** using a password-based login and an SSL IP tunnel, optionally attempting ESP/UDP. It is not a replacement for the full enterprise-managed GlobalProtect application.
