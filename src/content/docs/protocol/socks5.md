@@ -1,26 +1,57 @@
 ---
 title: SOCKS5
-description: A widely supported application proxy protocol for TCP, with UDP support depending on the client, server and configuration.
+description: Proxy inbound and outbound: configuration fields, example, limits and testing.
 ---
 
-A widely supported application proxy protocol for TCP, with UDP support depending on the client, server and configuration.
+SOCKS5 is an application proxy. The backend can accept SOCKS5 inbound traffic, or connect to a remote SOCKS5 server as an outbound.
 
-## Support and purpose
+## Before you configure
 
-**Current contract:** outbound and inbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+1. For an outbound: remote host/port and optional username/password.
+2. For an inbound: listening host/port, optional credentials and whether UDP associate is supported.
 
-## What to configure
+## Example outbound node
 
-For a local entry choose the Mixed or SOCKS5 inbound; for a remote server use a simple dialer followed by the SOCKS5 outbound. Credentials must match the server.
+The following is a **template**, not a working server account. Replace every hostname, address, key and credential with values from your server operator. The typed `chain` format is for the current backend; normally use **Destinations → Nodes** instead of pasting JSON into the Web UI.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "SOCKS5 example",
+  "origin": "manual",
+  "group": "examples",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "simple",
+      "simple": {
+        "host": "proxy.example.com",
+        "port": 1080
+      }
+    },
+    {
+      "type": "socks5",
+      "socks5": {
+        "user": "EXAMPLE_USER",
+        "password": "REPLACE_ME"
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Compatibility and security limits
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+- The outbound fields are `user` and `password`; inbound fields are `username`, `password`, and `udp`. These structures are distinct.
+- SOCKS5 UDP support requires compatible server and client behavior; TCP success does not imply UDP works.
+- The local Mixed preset accepts SOCKS5 and HTTP on the same port.
 
-## Further information
+## If it doesn't connect
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/socks5)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+1. Try a browser through a Local SOCKS5 or Mixed inbound and check Connections.
+2. If authentication fails, compare the server's username/password rather than substituting inbound credentials.
+3. For UDP applications, confirm both inbound and outbound support the required UDP behavior.
+
+## Where to go next
+
+Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go). Avoid sharing saved credentials or full node exports in public support requests.

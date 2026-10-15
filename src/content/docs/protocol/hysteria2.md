@@ -1,26 +1,60 @@
 ---
 title: Hysteria 2
-description: A QUIC-based proxy carrying TCP and UDP; authentication and TLS must match the server.
+description: QUIC proxy inbound and outbound: configuration fields, example, limits and testing.
 ---
 
-A QUIC-based proxy carrying TCP and UDP; authentication and TLS must match the server.
+Hysteria 2 uses QUIC over UDP with authentication and encrypted transport. Yuhaiin supports it as an outgoing node and as a server-side inbound.
 
-## Support and purpose
+## Before you configure
 
-**Current contract:** outbound and inbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+1. Host (with UDP port), authentication token and TLS identity of the Hysteria 2 server.
+2. Optional Salamander obfuscation password if the server enables it.
+3. Optional upload/download bandwidth limits and port/address hopping settings.
+4. For a server inbound, a QUIC listening network, TLS certificate and matching auth.
 
-## What to configure
+## Example outbound node
 
-The backend supports Hysteria 2 client and server configurations. Hopping may switch among UDP ports or relay addresses. Server-side TLS is part of its QUIC handshake, not a generic TCP wrapper.
+The following is a **template**, not a working server account. Replace every hostname, address, key and credential with values from your server operator. The typed `chain` format is for the current backend; normally use **Destinations → Nodes** instead of pasting JSON into the Web UI.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "Hysteria 2 example",
+  "origin": "manual",
+  "group": "examples",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "hysteria2",
+      "hysteria2": {
+        "host": "vpn.example.com:443",
+        "auth": "REPLACE_ME",
+        "tls": {
+          "enable": true,
+          "servernames": [
+            "vpn.example.com"
+          ]
+        }
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Compatibility and security limits
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+- Hysteria 2 requires a suitable UDP route; an upstream TCP-only proxy cannot transparently carry native QUIC.
+- Upload/download bandwidth fields are **bytes per second** in the current contract; zero selects automatic congestion control.
+- Port hopping and address hopping are optional; not every server is configured for them.
+- Client and server must agree on TLS/obfuscation; do not disable certificate verification to work around wrong SNI.
 
-## Further information
+## If it doesn't connect
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/docs/hysteria2.md)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+1. Check UDP reachability first; TCP Ping via another node does not prove UDP can traverse the network.
+2. Match auth and Salamander password with server settings.
+3. If hopping fails, temporarily disable it and confirm the base server endpoint works.
+4. Check server certificate hostname and your client's configured TLS server name.
+
+## Where to go next
+
+Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/docs/hysteria2.md). Avoid sharing saved credentials or full node exports in public support requests.

@@ -1,26 +1,58 @@
 ---
 title: OpenVPN
-description: A native OpenVPN client supporting UDP and TCP modes.
+description: VPN outbound: configuration fields, example, limits and testing.
 ---
 
-A native OpenVPN client supporting UDP and TCP modes.
+This is a native, in-process OpenVPN **client outbound**. It does not launch an external OpenVPN application or create a host TUN interface. The client uses Yuhaiin's in-process IP stack to carry application TCP and UDP.
 
-## Support and purpose
+## Before you configure
 
-**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+1. Gateway hostname and port, and whether the server uses UDP or TCP.
+2. Server CA certificate or an identity verifiable with system trust roots.
+3. Username/password and/or client certificate/key as required by the server.
+4. Optional tls-auth **or** tls-crypt static key from the profile, with matching key direction.
 
-## What to configure
+## Example outbound node
 
-The frontend node editor accepts inline CA/client certificate data, user/password and optional tls-auth/tls-crypt. It does not import .ovpn profile files. Pushed server routes and DNS are informational and must be applied separately.
+The following is a **template**, not a working server account. Replace every hostname, address, key and credential with values from your server operator. The typed `chain` format is for the current backend; normally use **Destinations → Nodes** instead of pasting JSON into the Web UI.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "OpenVPN example",
+  "origin": "manual",
+  "group": "examples",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "openvpn",
+      "openvpn": {
+        "gateway": "vpn.example.com:1194",
+        "network": "udp",
+        "username": "EXAMPLE_USER",
+        "password": "REPLACE_ME",
+        "ca_cert_pem": "-----BEGIN CERTIFICATE-----\nYOUR_CA_CERTIFICATE\n-----END CERTIFICATE-----",
+        "auto_reconnect": true
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Compatibility and security limits
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+- The node editor does **not** parse or import `.ovpn` files: copy supported parameters from the profile.
+- Unsupported: compression, TAP mode, legacy CBC/static-key data mode, tls-crypt-v2, interactive MFA, and fragmented PUSH_REPLY.
+- Pushed DNS and route details are informational. Configure Yuhaiin's resolver roles and route rules explicitly.
+- Rekeying can preserve sockets, but full reconnect does not migrate existing app sockets.
 
-## Further information
+## If it doesn't connect
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/openvpn/README.md)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+1. Check whether the gateway uses TCP or UDP, including the port and required intermediate proxy.
+2. Check CA trust and exact server name. Do not turn off verification to fix a typo.
+3. Compare the profile's tls-auth direction / tls-crypt key and AEAD cipher set. These modes cannot be used together.
+4. If the node becomes active but internal sites fail, inspect server-pushed settings as **information** and configure Yuhaiin routes/DNS separately.
+
+## Where to go next
+
+Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/openvpn/README.md). Avoid sharing saved credentials or full node exports in public support requests.

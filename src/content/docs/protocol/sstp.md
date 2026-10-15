@@ -1,26 +1,53 @@
 ---
 title: SSTP
-description: A VPN carried over TLS with PPP authentication.
+description: VPN outbound: configuration fields, example, limits and testing.
 ---
 
-A VPN carried over TLS with PPP authentication.
+SSTP carries PPP over a TLS connection and uses MS-CHAPv2 authentication. In Yuhaiin it is an outbound node backed by the userspace IP stack.
 
-## Support and purpose
+## Before you configure
 
-**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+1. SSTP server hostname and optional port.
+2. Username/password accepted by the server.
+3. A TLS certificate the client can validate; optional inner MTU.
 
-## What to configure
+## Example outbound node
 
-Requires a compatible SSTP gateway and credentials. TLS certificate verification should remain enabled unless you have a controlled reason to override it.
+The following is a **template**, not a working server account. Replace every hostname, address, key and credential with values from your server operator. The typed `chain` format is for the current backend; normally use **Destinations → Nodes** instead of pasting JSON into the Web UI.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "SSTP example",
+  "origin": "manual",
+  "group": "examples",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "sstp",
+      "sstp": {
+        "gateway": "vpn.example.com",
+        "username": "EXAMPLE_USER",
+        "password": "REPLACE_ME",
+        "insecure_skip_verify": false
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Compatibility and security limits
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+- SSTP is distinct from native SoftEther SSL-VPN and OpenVPN.
+- MS-CHAPv2 is a legacy authentication method; protect credentials and use unique passwords.
+- The embedded tunnel does not by itself modify your OS routing table.
 
-## Further information
+## If it doesn't connect
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/sstp/README.md)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+1. If authentication fails, verify the gateway's SSTP compatibility mode, not just that it advertises 'SSL VPN'.
+2. Check hostname/certificate trust when TLS negotiation fails.
+3. If connection succeeds but routing fails, inspect destination selection and the local inbound.
+
+## Where to go next
+
+Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/sstp/README.md). Avoid sharing saved credentials or full node exports in public support requests.

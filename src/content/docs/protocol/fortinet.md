@@ -1,26 +1,56 @@
 ---
 title: Fortinet SSL VPN
-description: A Fortinet-compatible SSL VPN with optional DTLS data channel.
+description: VPN outbound: configuration fields, example, limits and testing.
 ---
 
-A Fortinet-compatible SSL VPN with optional DTLS data channel.
+This outbound logs into a compatible Fortinet SSL-VPN tunnel-mode gateway over HTTPS. Data runs over TLS and may move to DTLS when supported.
 
-## Support and purpose
+## Before you configure
 
-**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+1. Compatible FortiOS tunnel-mode gateway and username.
+2. Password and, when required, the configured realm.
+3. Optional one-time token or TOTP secret, plus trusted CA PEM if the gateway uses a private CA.
+4. Optional `disable_dtls` and MTU.
 
-## What to configure
+## Example outbound node
 
-Enter the gateway and credentials from your operator. Do not assume every enterprise web-login or MFA deployment is supported.
+The following is a **template**, not a working server account. Replace every hostname, address, key and credential with values from your server operator. The typed `chain` format is for the current backend; normally use **Destinations → Nodes** instead of pasting JSON into the Web UI.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "Fortinet SSL VPN example",
+  "origin": "manual",
+  "group": "examples",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "fortinet",
+      "fortinet": {
+        "gateway": "vpn.example.com",
+        "username": "EXAMPLE_USER",
+        "password": "REPLACE_ME",
+        "realm": "",
+        "disable_dtls": false
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Compatibility and security limits
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+- Not all FortiOS versions expose the same SSL VPN tunnel feature: FortiOS 7.6.3 and later replace SSL-VPN tunnel mode with IPsec.
+- Interactive MFA methods are not universally supported; the API exposes one-time `token` or `totp_secret` fields.
+- TOTP secrets are long-term credentials. Do not store or share them casually.
 
-## Further information
+## If it doesn't connect
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/fortinet/README.md)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+1. Confirm that your FortiOS deployment still supports SSL-VPN tunnel mode.
+2. Distinguish TLS login failure from DTLS data-path failure by retrying with `disable_dtls` enabled.
+3. Check realm and second-factor method; server-side requirements may not match the UI's options.
+4. Use a trusted private CA rather than disabling TLS certificate validation.
+
+## Where to go next
+
+Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/fortinet/README.md). Avoid sharing saved credentials or full node exports in public support requests.

@@ -1,26 +1,57 @@
 ---
 title: HTTP proxy
-description: HTTP CONNECT allows an application to ask a proxy server to establish a TCP connection.
+description: Proxy inbound and outbound: configuration fields, example, limits and testing.
 ---
 
-HTTP CONNECT allows an application to ask a proxy server to establish a TCP connection.
+An HTTP proxy supports ordinary web requests and the CONNECT method for tunneling TCP streams. It is not the same as a full-device VPN.
 
-## Support and purpose
+## Before you configure
 
-**Current contract:** outbound and inbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+1. For an outbound: proxy host/port and optional Basic authentication.
+2. For an inbound: local listener, optional username/password and suitable network settings.
 
-## What to configure
+## Example outbound node
 
-In a current outbound chain the HTTP step follows a dialer such as simple. HTTP outbound uses user/password; inbound HTTP uses username/password and a listening network. HTTP CONNECT by itself is not a generic UDP tunnel.
+The following is a **template**, not a working server account. Replace every hostname, address, key and credential with values from your server operator. The typed `chain` format is for the current backend; normally use **Destinations → Nodes** instead of pasting JSON into the Web UI.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "HTTP proxy example",
+  "origin": "manual",
+  "group": "examples",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "simple",
+      "simple": {
+        "host": "proxy.example.com",
+        "port": 8080
+      }
+    },
+    {
+      "type": "http",
+      "http": {
+        "user": "EXAMPLE_USER",
+        "password": "REPLACE_ME"
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Compatibility and security limits
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+- Outbound fields use `user`/`password`; inbound HTTP fields use `username`/`password`.
+- Plain HTTP CONNECT does not provide generic native UDP proxying.
+- An HTTP proxy configured on localhost affects only applications that actually use it.
 
-## Further information
+## If it doesn't connect
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/http)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+1. Test a TCP HTTPS site using a local Mixed inbound.
+2. Use curl explicitly: `curl --proxy http://127.0.0.1:9002 https://example.com/`.
+3. If TLS sites fail but HTTP sites work, check CONNECT handling and the chosen remote server.
+
+## Where to go next
+
+Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go). Avoid sharing saved credentials or full node exports in public support requests.

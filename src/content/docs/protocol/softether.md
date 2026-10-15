@@ -1,26 +1,57 @@
 ---
-title: SoftEther SSL-VPN
-description: The native SoftEther SSL-VPN client, distinct from SSTP and OpenVPN compatibility servers.
+title: SoftEther native SSL-VPN
+description: Experimental VPN outbound: configuration fields, example, limits and testing.
 ---
 
-The native SoftEther SSL-VPN client, distinct from SSTP and OpenVPN compatibility servers.
+This is a client for the **native SoftEther SSL-VPN protocol**, not for SoftEther Server's separately supported SSTP and OpenVPN compatibility modes. It uses a userspace network stack without creating a host TAP device.
 
-## Support and purpose
+## Before you configure
 
-**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+1. Server gateway and port, ordinarily 443.
+2. Virtual hub name, usually `DEFAULT`, and server-issued credentials or supported certificate authentication.
+3. A working DHCP gateway on the remote virtual network, or both a static IPv4 address and router.
+4. Optional UDP acceleration, IPv6 static address/router and reconnect settings.
 
-## What to configure
+## Example outbound node
 
-Select the virtual hub, credentials and optional certificate settings matching the server. Address/router are obtained through DHCP unless manually set. UDP acceleration and reconnect are implementation options.
+The following is a **template**, not a working server account. Replace every hostname, address, key and credential with values from your server operator. The typed `chain` format is for the current backend; normally use **Destinations → Nodes** instead of pasting JSON into the Web UI.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "SoftEther native SSL-VPN example",
+  "origin": "manual",
+  "group": "examples",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "softether",
+      "softether": {
+        "gateway": "vpn.example.org:443",
+        "hub": "DEFAULT",
+        "username": "EXAMPLE_USER",
+        "password": "REPLACE_ME",
+        "auto_reconnect": true
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Compatibility and security limits
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+- Default address assignment needs remote DHCP (e.g. SecureNAT). Supplying only `address` without `router` is not enough for static IPv4.
+- Optional IPv6 requires **both** `ipv6_address` and `ipv6_router`; automatic SLAAC/DHCPv6 are not implemented.
+- UDP Acceleration v2 requires a direct suitable UDP path; it can fall back to TLS and does not work through every upstream.
+- No host-wide kill switch or automatically applied pushed DNS/split routing; sessions are rebuilt after reconnect.
 
-## Further information
+## If it doesn't connect
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/softether/README.md)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+1. Check hub name and user permissions on the SoftEther server.
+2. If authentication succeeds but traffic never flows, check remote DHCP/route/SecureNAT settings.
+3. For optional UDP acceleration, compare behavior with it disabled; not all server/transport paths can use it.
+4. When using manual IPv6, verify both address/router and MTU at least 1280.
+
+## Where to go next
+
+Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/softether/README.md). Avoid sharing saved credentials or full node exports in public support requests.

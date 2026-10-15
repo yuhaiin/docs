@@ -1,26 +1,57 @@
 ---
-title: L2TPv3
-description: Transports a Layer-2 Ethernet pseudowire, using an optional control session or static tunnel setup.
+title: L2TPv3 pseudowire
+description: Advanced unencrypted VPN outbound: configuration fields, example, limits and testing.
 ---
 
-Transports a Layer-2 Ethernet pseudowire, using an optional control session or static tunnel setup.
+L2TPv3 transports Ethernet frames over UDP and exposes a userspace network stack for upper-layer traffic. It is for operators with a compatible remote pseudowire endpoint.
 
-## Support and purpose
+## Before you configure
 
-**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+1. Remote UDP gateway and compatible peer configuration.
+2. For dynamic sessions, control negotiation and optional shared secret.
+3. For static sessions, matching local/peer session IDs and cookies.
+4. At least one IPv4/IPv6 interface prefix, with routers when used for forwarding.
 
-## What to configure
+## Example outbound node
 
-This is for network operators, not a typical consumer proxy. Static sessions require both peers to agree on tunnel/session IDs and optional cookies.
+The following is a **template**, not a working server account. Replace every hostname, address, key and credential with values from your server operator. The typed `chain` format is for the current backend; normally use **Destinations → Nodes** instead of pasting JSON into the Web UI.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "L2TPv3 pseudowire example",
+  "origin": "manual",
+  "group": "examples",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "l2tpv3",
+      "l2tpv3": {
+        "gateway": "vpn.example.com:1701",
+        "remote_end_id": "branch-b",
+        "sublayer": true,
+        "address": "10.89.0.2/24",
+        "router": "10.89.0.1"
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Compatibility and security limits
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+- Data frames are not encrypted. A control shared secret does not make the data channel confidential.
+- Static mode requires both peers to agree on session IDs, UDP endpoints, cookies and L2-specific sublayer.
+- IPv4/IPv6 addresses inside the virtual network are distinct from the public UDP gateway.
+- Only UDP encapsulation is supported, not raw IP protocol 115.
 
-## Further information
+## If it doesn't connect
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+1. Match session IDs and cookie direction carefully with the server; names can differ between implementations.
+2. Confirm whether the server enables dynamic control or static session mode.
+3. Ensure the interface address and router are inside the intended pseudowire network.
+4. Prefer an authenticated encrypted underlay for sensitive traffic.
+
+## Where to go next
+
+Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/l2tp/README.md). Avoid sharing saved credentials or full node exports in public support requests.

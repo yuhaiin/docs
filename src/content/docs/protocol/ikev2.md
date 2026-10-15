@@ -1,26 +1,56 @@
 ---
 title: IKEv2 / IPsec
-description: VPN transport using IKE negotiation and ESP; gateway authentication may use PSK or EAP-MSCHAPv2.
+description: VPN outbound: configuration fields, example, limits and testing.
 ---
 
-VPN transport using IKE negotiation and ESP; gateway authentication may use PSK or EAP-MSCHAPv2.
+Yuhaiin's IKEv2 outbound negotiates an IPsec tunnel, transporting application TCP/UDP through the in-process ESP stack. It does not require a host OS VPN connection.
 
-## Support and purpose
+## Before you configure
 
-**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+1. Gateway address and local/client identity.
+2. Pre-shared key to authenticate the gateway.
+3. Expected server identity, if configured.
+4. Optional username/password when the gateway requires EAP-MSCHAPv2.
 
-## What to configure
+## Example outbound node
 
-Configure gateway, expected server ID, client identity and relevant credentials. Enabling TCP encapsulation depends on server support; it is not general HTTP tunneling.
+The following is a **template**, not a working server account. Replace every hostname, address, key and credential with values from your server operator. The typed `chain` format is for the current backend; normally use **Destinations → Nodes** instead of pasting JSON into the Web UI.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "IKEv2 / IPsec example",
+  "origin": "manual",
+  "group": "examples",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "ikev2",
+      "ikev2": {
+        "gateway": "vpn.example.com",
+        "local_id": "user@example.com",
+        "server_id": "vpn.example.com",
+        "psk": "REPLACE_ME",
+        "tcp": false
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Compatibility and security limits
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+- The current node contract exposes PSK + optional EAP-MSCHAPv2. Other native lower-layer options are not all exposed in the UI.
+- TCP encapsulation requires a server supporting RFC 8229. The ordinary path is UDP/NAT-T.
+- EAP-MSCHAPv2 uses legacy password-derived cryptography and is vulnerable to offline guessing. Prefer stronger authentication on the server when available.
 
-## Further information
+## If it doesn't connect
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/ikev2/README.md)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+1. Verify the gateway's local/server ID format and PSK. Both identifiers are meaningful even when the hostname is correct.
+2. Try UDP mode first unless the server specifically supports TCP encapsulation.
+3. If EAP authentication fails, confirm username/password and that the server permits EAP-MSCHAPv2.
+4. Do not assume an IPsec gateway configured only for certificates can use the current node form.
+
+## Where to go next
+
+Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/ikev2/README.md). Avoid sharing saved credentials or full node exports in public support requests.

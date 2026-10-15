@@ -1,26 +1,54 @@
 ---
 title: AnyConnect
-description: A Cisco-compatible SSL VPN using CSTP and optional DTLS.
+description: VPN outbound: configuration fields, example, limits and testing.
 ---
 
-A Cisco-compatible SSL VPN using CSTP and optional DTLS.
+This outbound uses a compatible AnyConnect XML login and **CSTP over TLS**. When offered by the gateway and permitted by the network, it can use a DTLS data channel.
 
-## Support and purpose
+## Before you configure
 
-**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+1. Compatible gateway hostname and optional port.
+2. Username and password.
+3. Server TLS identity or trusted certificate.
+4. Optional `disable_dtls` and MTU preferences.
 
-## What to configure
+## Example outbound node
 
-Use gateway credentials supplied by the operator. Some enterprise deployments require browser-based login or policies not supported by this client.
+The following is a **template**, not a working server account. Replace every hostname, address, key and credential with values from your server operator. The typed `chain` format is for the current backend; normally use **Destinations → Nodes** instead of pasting JSON into the Web UI.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "AnyConnect example",
+  "origin": "manual",
+  "group": "examples",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "anyconnect",
+      "anyconnect": {
+        "gateway": "vpn.example.com",
+        "username": "EXAMPLE_USER",
+        "password": "REPLACE_ME",
+        "disable_dtls": false
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Compatibility and security limits
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+- Some enterprise web-based login, SSO or MFA systems need flows that are not exposed by this node.
+- DTLS is optional; a successful TLS session does not guarantee UDP operation.
+- This client is not Cisco's full endpoint-management agent.
 
-## Further information
+## If it doesn't connect
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/anyconnect/README.md)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+1. Check gateway URL/port and whether browser-based sign-in is mandatory.
+2. If TCP works but UDP-based apps fail, test with DTLS disabled; this helps distinguish UDP path issues.
+3. If certificate verification fails, import a trusted CA on the appropriate platform instead of accepting all certificates.
+
+## Where to go next
+
+Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/anyconnect/README.md). Avoid sharing saved credentials or full node exports in public support requests.

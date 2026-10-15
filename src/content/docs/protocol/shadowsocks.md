@@ -1,26 +1,57 @@
 ---
 title: Shadowsocks
-description: A password-authenticated encrypted proxy protocol.
+description: Proxy outbound: configuration fields, example, limits and testing.
 ---
 
-A password-authenticated encrypted proxy protocol.
+Shadowsocks is an encrypted proxy. In Yuhaiin's current node model, the client normally uses a simple network dialer followed by a Shadowsocks protocol step.
 
-## Support and purpose
+## Before you configure
 
-**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+1. Server host and port.
+2. AEAD cipher method and matching password.
 
-## What to configure
+## Example outbound node
 
-Use the Shadowsocks template. A typical chain contains a simple dialer followed by the Shadowsocks step. The method and password must match the server. Avoid putting keys in shared screenshots.
+The following is a **template**, not a working server account. Replace every hostname, address, key and credential with values from your server operator. The typed `chain` format is for the current backend; normally use **Destinations → Nodes** instead of pasting JSON into the Web UI.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "Shadowsocks example",
+  "origin": "manual",
+  "group": "examples",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "simple",
+      "simple": {
+        "host": "proxy.example.com",
+        "port": 8388
+      }
+    },
+    {
+      "type": "shadowsocks",
+      "shadowsocks": {
+        "method": "aes-256-gcm",
+        "password": "REPLACE_ME"
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Compatibility and security limits
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+- The current outbound contract uses `chain`, not the former `protocols` array.
+- Shadowsocks is an outbound-only protocol in the typed inbound contract; do not invent a Shadowsocks listener in that API.
+- The server must recognize the same method and password; TLS is not automatically added.
 
-## Further information
+## If it doesn't connect
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/shadowsocks)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+1. Verify host/port and the exact cipher. A wrong password often looks like a connection that stalls after reaching the port.
+2. Test one TCP application first, then UDP if needed.
+3. Confirm the app uses a local inbound and is routed to this node.
+
+## Where to go next
+
+Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go). Avoid sharing saved credentials or full node exports in public support requests.

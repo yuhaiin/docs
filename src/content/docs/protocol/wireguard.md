@@ -1,26 +1,65 @@
 ---
 title: WireGuard
-description: A VPN protocol carried by UDP, able to transport IP packets containing TCP or UDP.
+description: VPN outbound: configuration fields, example, limits and testing.
 ---
 
-A VPN protocol carried by UDP, able to transport IP packets containing TCP or UDP.
+WireGuard creates an encrypted IP tunnel between a local key and one or more remote peers. The Yuhaiin implementation uses a userspace stack for application traffic.
 
-## Support and purpose
+## Before you configure
 
-**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+1. Your own private key and a local tunnel address prefix.
+2. Remote peer public key, outer endpoint and allowed IPs.
+3. Optional preshared key, persistent keepalive and MTU.
 
-## What to configure
+## Example outbound node
 
-Configure your private key, peer public key, endpoint, allowed IP ranges and optional preshared key according to your server. Protect the private key.
+The following is a **template**, not a working server account. Replace every hostname, address, key and credential with values from your server operator. The typed `chain` format is for the current backend; normally use **Destinations → Nodes** instead of pasting JSON into the Web UI.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "WireGuard example",
+  "origin": "manual",
+  "group": "examples",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "wireguard",
+      "wireguard": {
+        "secretKey": "REPLACE_BASE64_PRIVATE_KEY",
+        "endpoint": [
+          "10.8.0.2/32"
+        ],
+        "peers": [
+          {
+            "publicKey": "REPLACE_BASE64_PEER_PUBLIC_KEY",
+            "endpoint": "vpn.example.com:51820",
+            "allowedIps": [
+              "0.0.0.0/0"
+            ],
+            "keepAlive": 25
+          }
+        ],
+        "mtu": 1400
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Compatibility and security limits
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+- The node's outer peer endpoint and local interface addresses are different: `endpoint` in the root object lists local prefixes, while the peer has the server endpoint.
+- WireGuard uses UDP outside the tunnel even when it carries TCP inside.
+- The Yuhaiin outbound does not, on its own, register a host-wide TUN or change OS routing.
 
-## Further information
+## If it doesn't connect
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/wireguard)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+1. Ensure the peer is configured to recognize your public key and local tunnel IP.
+2. Make sure your peer's `allowedIps` and routing policy include the target network.
+3. Verify UDP reachability and firewall policy before tuning MTU.
+4. If only certain sites fail, inspect destination routing or DNS rather than immediately replacing keys.
+
+## Where to go next
+
+Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go). Avoid sharing saved credentials or full node exports in public support requests.
