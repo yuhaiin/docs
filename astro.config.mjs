@@ -11,6 +11,7 @@ export default defineConfig({
       description: 'Guides and reference for Yuhaiin',
       favicon: '/favicon.ico',
       customCss: ['./src/styles/yuhaiin.css'],
+      editLink: { baseUrl: 'https://github.com/yuhaiin/docs/edit/main/' },
       social: [{ icon: 'github', label: 'Yuhaiin on GitHub', href: 'https://github.com/yuhaiin/yuhaiin' }],
       sidebar: [
         { label: 'Get started', items: [
