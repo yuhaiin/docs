@@ -39,3 +39,41 @@ The backend also includes WireGuard, AmneziaWG, Hysteria 2, OpenVPN, GlobalProte
 **Destinations → Active nodes** lists currently running outbound sessions, not all saved profiles. You can terminate a stuck instance without deleting its configuration. See [Active outbound nodes](/documents/features/active-nodes/).
 
 For initial setup from a subscription URL, follow [Import a provider subscription](/documents/guides/subscription/).
+
+## From a saved node to real traffic
+
+A saved node has no effect until something **selects it**. Two common selection paths are:
+
+1. The default TCP/UDP selection from the Home setup area, used only when the effective routing decision targets that selection.
+2. A routing rule whose target refers directly to a node or to a selector.
+
+If a remote node appears in the list but all websites still use your direct IP address, check **Routing → Route rules → Unmatched traffic** before repeatedly changing credentials. A default routing mode of **Direct** will not send unmatched traffic to the proxy merely because you selected it on Home.
+
+### A safe verification sequence
+
+1. Add the node using the correct protocol template and required credentials.
+2. Keep a known-working **Direct** destination available as a fallback.
+3. Select the intended TCP node, then verify the default routing mode is **Proxy** and the target is correct.
+4. Send a request through your existing **Mixed** inbound. On a clean backend the listener is normally `127.0.0.1:1080`; always confirm its current address.
+5. Check **Monitoring → Connections** and the resulting outbound/route. Compare a Direct run with the remote proxy run.
+6. If the request fails, check **Failed history** and the node's latency or IP checks. Do not interpret a low latency number as a successful authenticated application connection.
+
+## Advanced: why protocol chains are ordered
+
+Outbound nodes use a typed, ordered `chain`. Each step changes the connection available to later steps. A typical authenticated TLS proxy might involve an endpoint connection, then TLS, then the proxy protocol. Reordering the steps can produce a TLS handshake failure, a protocol parse error or a connection to the wrong address.
+
+Unlike an inbound Mixed listener, a node's outbound HTTP/SOCKS credentials use the field `user`, **not** `username`, in the current [Go node contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go). Inbound authentication fields are defined in a different [inbound contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/inbound/types.go).
+
+For complex transports, compare the editor's [templates](https://github.com/yuhaiin/yuhaiin-react/blob/main/src/docs/node/templates.ts) with the backend contract and [protocol reference](/documents/protocol/). The saved chain defines the configuration; the runtime still needs a reachable endpoint, compatible server and valid credentials.
+
+## Saved nodes, selected nodes and active nodes
+
+These are three different views:
+
+| View | Meaning |
+| --- | --- |
+| **Nodes** | Profiles stored in the configuration, including currently unused ones |
+| **Selected TCP/UDP nodes** | Default selections used when routing refers to them |
+| **Active nodes** | Runtime outbound instances held open for current or recent traffic |
+
+The frontend [node API](https://github.com/yuhaiin/yuhaiin-react/blob/main/src/api/nodes.ts) reflects this with `listNodes()`, `selectedNodes()` and `activeNodes()`. Terminating an active node closes a runtime instance but does not remove its saved configuration or default selection.
