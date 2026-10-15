@@ -20,11 +20,16 @@ Download a release for your device from the [official releases page](https://git
 
 You may also see `amd64v3` or `amd64v4` builds. Those require newer CPU instruction sets. **Choose plain `amd64` unless you know your CPU supports the optimized variant.** Other operating systems and architectures may be listed on the release page.
 
-On Windows, extract the download if it is an archive. On macOS or Linux, make the extracted executable runnable:
+On Windows, extract the download if it is an archive. Release executable filenames often include the operating system and architecture. The following commands assume that you **rename** the downloaded executable to `yuhaiin` (`yuhaiin.exe` on Windows).
+
+On macOS or Linux, run these commands in the folder with the downloaded file (replace the example filename with the one you downloaded):
 
 ```sh
+mv ./yuhaiin-linux-amd64 ./yuhaiin
 chmod +x ./yuhaiin
 ```
+
+On Windows, rename a file such as `yuhaiin-windows-amd64.exe` to `yuhaiin.exe` in Explorer or use its actual filename in the command below.
 
 macOS might block an unsigned download. Review the publisher and file before overriding a macOS security warning. Do not blindly run commands from unknown download mirrors.
 
