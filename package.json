@@ -1,17 +1,22 @@
 {
-  "name": "",
+  "name": "yuhaiin-docs",
+  "private": true,
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "scripts": {
     "dev": "astro dev --host",
     "start": "astro dev",
-    "build": "astro build --base /documents",
+    "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check:links": "node scripts/check-docs.mjs"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.37.0",
-    "astro": "^5.1.5",
-    "sharp": "^0.34.0"
+    "@astrojs/starlight": "^0.42.6",
+    "astro": "^7.3.8",
+    "sharp": "^0.34.5"
+  },
+  "engines": {
+    "node": ">=24.0.0"
   }
 }

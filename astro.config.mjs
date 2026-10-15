@@ -2,48 +2,69 @@
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 
-// https://astro.build/config
 export default defineConfig({
-	integrations: [
-		starlight({
-			title: 'Yuhaiin Docs',
-			favicon: './public/favicon.ico',
-			logo: {
-				src: './public/favicon.ico',
-			},
-			social: [
-				{
-					icon:"github",
-					label:"Github",
-					href: 'https://github.com/yuhaiin/yuhaiin',
-				}
-		],
-			sidebar: [
-				{
-					label: 'Start',
-					autogenerate: { directory: 'guides' },
-				},
-				{
-					label: 'Protocol',
-					autogenerate: { directory: 'protocol' },
-				},
-				{
-					label: 'Bypass',
-					autogenerate: { directory: 'bypass' }
-				},
-				{
-					label: "Resolver",
-					autogenerate: { directory: 'resolver' }
-				},
-				{
-					label: "Sniff",
-					autogenerate: { directory: 'sniff' }
-				},
-				{
-					label: "Latency",
-					autogenerate: { directory: 'latency' }
-				}
-			],
-		}),
-	],
+  site: 'https://yuhaiin.github.io',
+  base: '/documents',
+  integrations: [
+    starlight({
+      title: 'Yuhaiin Docs',
+      description: 'Guides and reference for Yuhaiin',
+      favicon: '/favicon.ico',
+      customCss: ['./src/styles/yuhaiin.css'],
+      editLink: { baseUrl: 'https://github.com/yuhaiin/docs/edit/main/' },
+      social: [{ icon: 'github', label: 'Yuhaiin on GitHub', href: 'https://github.com/yuhaiin/yuhaiin' }],
+      sidebar: [
+        { label: 'Get started', items: [
+          { slug: 'guides' },
+          { slug: 'guides/webui-basics' },
+          { slug: 'guides/install' },
+          { slug: 'guides/windows' },
+          { slug: 'guides/macos' },
+          { slug: 'guides/linux' },
+          { slug: 'guides/first-connection' },
+          { slug: 'guides/subscription' },
+          { slug: 'guides/selective-routing' },
+          { slug: 'guides/local-proxy' },
+          { slug: 'guides/android' },
+          { slug: 'guides/tun' },
+          { slug: 'guides/troubleshooting' },
+          { slug: 'guides/dns-troubleshooting' },
+          { slug: 'guides/recover-network' },
+          { slug: 'guides/faq' },
+          { slug: 'guides/glossary' },
+          { slug: 'guides/security' },
+        ] },
+        { label: 'Using the Web UI', items: [
+          { slug: 'features/nodes' },
+          { slug: 'features/publishing' },
+          { slug: 'features/active-nodes' },
+          { slug: 'features/inbounds' },
+          { slug: 'features/system-proxy' },
+          { slug: 'features/routing' },
+          { slug: 'features/lists' },
+          { slug: 'features/dns' },
+          { slug: 'features/monitoring' },
+          { slug: 'features/diagnostics' },
+          { slug: 'features/pprof' },
+          { slug: 'features/backup' },
+          { slug: 'features/settings' },
+        ] },
+        { label: 'Technical reference', items: [
+          { slug: 'reference/architecture' },
+          { slug: 'reference/advanced-inbounds' },
+          { slug: 'reference/compatibility' },
+          { slug: 'reference/configuration' },
+          { slug: 'reference/vpn-protocols' },
+          { slug: 'guides/build' },
+          { slug: 'reference/contributing' },
+          { label: 'Protocol reference', items: [{ autogenerate: { directory: 'protocol' } }] },
+        ] },
+        { label: 'Legacy topic links', collapsed: true, items: [
+          { label: 'Bypass', items: [{ autogenerate: { directory: 'bypass' } }] },
+          { label: 'Resolver', items: [{ autogenerate: { directory: 'resolver' } }] },
+          { label: 'Sniffing', items: [{ autogenerate: { directory: 'sniff' } }] },
+        ] },
+      ],
+    }),
+  ],
 });

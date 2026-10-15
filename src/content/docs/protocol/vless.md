@@ -1,54 +1,60 @@
 ---
-title: VLESS
+title: "VLESS"
+description: "outbound: current Yuhaiin support and configuration."
 ---
 
-VLESS is a lightweight, simplified version of VMess. It does not include its own encryption layer and relies on the transport layer (typically TLS) for security.
+VLESS is a light proxy protocol whose payload protection depends on its transport; a plain unencrypted chain should not be assumed private.
 
-## Network Support
+## Where it fits
 
-- **TCP**: Supported natively.
-- **UDP**: Supported via **UDP over Stream**.
-    - **NAT Type**: **Symmetric NAT**. Similar to VMess, the current implementation maps one session to one remote destination.
+**Support:** outbound. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-### Configuration
+## Typed outbound example
 
-VLESS configuration is very minimal:
-
-*   **Address**: The IP or hostname of the server.
-*   **Port**: The server port.
-*   **UUID**: Your unique user ID for authentication.
-
-### Example Configuration
+This is a structural example, **not working credentials**. Replace placeholders and match all additional transport requirements of your remote server.
 
 ```json
 {
-  "name": "My VLESS Server",
-  "protocols": [
+  "id": "example-node",
+  "name": "VLESS example",
+  "origin": "manual",
+  "enabled": true,
+  "chain": [
     {
+      "type": "simple",
       "simple": {
-        "host": "vless.example.com",
+        "host": "proxy.example.com",
         "port": 443
       }
     },
     {
+      "type": "tls",
       "tls": {
         "enable": true,
-        "servernames": ["vless.example.com"]
+        "servernames": [
+          "proxy.example.com"
+        ]
       }
     },
     {
+      "type": "vless",
       "vless": {
-        "uuid": "YOUR-UUID-HERE"
+        "uuid": "00000000-0000-0000-0000-000000000000"
       }
     }
   ]
 }
 ```
 
-### Developer Details
+## Fields and requirements
 
-#### Implementation
-VLESS in `yuhaiin` is implemented as a thin wrapper. Since it has no internal encryption, it **must** be used with TLS or another secure transport to protect the traffic and the UUID.
+1. `uuid`: the account ID issued by the server.
+2. TLS/REALITY credentials belong to separate chain steps, not inside the VLESS object.
 
-#### Protocol Structure
-VLESS sends a 1-byte version (0), followed by the 16-byte UUID, a 1-byte command (1 for TCP, 2 for UDP), and then the destination address and port.
+## Important limits and troubleshooting
+
+- Use the transport actually deployed on the server. Ordinary TLS and REALITY are not interchangeable.
+- A VLESS UUID is a secret credential; do not post it with a screenshot.
+- The current backend contract exposes VLESS as an outbound protocol step.
+
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) rather than examples from old releases.
