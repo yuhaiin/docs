@@ -49,7 +49,7 @@ The following is a **template**, not a working server account. Replace every hos
 ## If it doesn't connect
 
 1. Test a TCP HTTPS site using a local Mixed inbound.
-2. Use curl explicitly: `curl --proxy http://127.0.0.1:9002 https://example.com/`.
+2. On a clean backend installation, use curl explicitly (or substitute your configured inbound address): `curl --proxy http://127.0.0.1:1080 https://example.com/`.
 3. If TLS sites fail but HTTP sites work, check CONNECT handling and the chosen remote server.
 
 ## Where to go next
