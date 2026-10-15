@@ -9,14 +9,14 @@ For a first test on macOS, run Yuhaiin locally and configure just one app. TUN a
 
 Download the matching release from [Yuhaiin releases](https://github.com/yuhaiin/yuhaiin/releases): **darwin-arm64** for Apple Silicon (M-series), **darwin-amd64** for Intel. Alternatively, if you use Homebrew:
 
-```sh
+```sh frame="none"
 brew tap yuhaiin/yuhaiin
 brew install yuhaiin
 ```
 
 For a downloaded standalone executable, rename it to `yuhaiin`, open Terminal in its folder and run:
 
-```sh
+```sh frame="none"
 chmod +x ./yuhaiin
 ./yuhaiin -host 127.0.0.1:50051
 ```

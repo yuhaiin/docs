@@ -9,7 +9,7 @@ The backend is Go; its current module declares **Go 1.27.1**. The separately dev
 
 ## Build the backend
 
-```sh
+```sh frame="none"
 git clone https://github.com/yuhaiin/yuhaiin.git
 cd yuhaiin
 go version
@@ -20,7 +20,7 @@ The Makefile's `yuhaiin` target builds the desktop command, using generated tags
 
 For the frontend source:
 
-```sh
+```sh frame="none"
 git clone https://github.com/yuhaiin/yuhaiin-react.git
 cd yuhaiin-react
 npm install
@@ -33,7 +33,7 @@ For development, `npm run dev` starts the Vite server, but this does not replace
 
 This separate repository uses Astro + Starlight:
 
-```sh
+```sh frame="none"
 git clone https://github.com/yuhaiin/docs.git
 cd docs
 npm install

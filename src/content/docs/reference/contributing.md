@@ -23,7 +23,7 @@ Use plain English and evidence-based statements rather than marketing language o
 
 ## Verify changes
 
-```sh
+```sh frame="none"
 npm ci
 npm run check:links
 npm run build

@@ -9,7 +9,10 @@ export default defineConfig({
     starlight({
       title: 'Yuhaiin Docs',
       description: 'Guides and reference for Yuhaiin',
-      favicon: '/favicon.ico',
+      favicon: '/favicon.svg',
+      logo: { src: './src/assets/yuhaiin.svg', alt: 'Yuhaiin' },
+      head: [{ tag: 'link', attrs: { rel: 'apple-touch-icon', href: '/documents/apple-touch-icon.png', sizes: '180x180' } }],
+      expressiveCode: { styleOverrides: { borderRadius: '0.6rem' } },
       customCss: ['./src/styles/yuhaiin.css'],
       editLink: { baseUrl: 'https://github.com/yuhaiin/docs/edit/main/' },
       social: [{ icon: 'github', label: 'Yuhaiin on GitHub', href: 'https://github.com/yuhaiin/yuhaiin' }],

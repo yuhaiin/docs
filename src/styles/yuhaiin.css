@@ -37,10 +37,6 @@ header.header { border-bottom: 1px solid var(--sl-color-hairline); }
   border-radius: 0.35rem;
   padding: 0.12em 0.35em;
 }
-.sl-markdown-content pre {
-  border: 1px solid var(--sl-color-hairline);
-  border-radius: 0.75rem;
-}
 .sl-markdown-content table {
   display: block;
   max-width: 100%;

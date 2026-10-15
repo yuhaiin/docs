@@ -24,7 +24,7 @@ On Windows, extract the download if it is an archive. Release executable filenam
 
 On macOS or Linux, run these commands in the folder with the downloaded file (replace the example filename with the one you downloaded):
 
-```sh
+```sh frame="none"
 mv ./yuhaiin-linux-amd64 ./yuhaiin
 chmod +x ./yuhaiin
 ```
@@ -37,13 +37,13 @@ macOS might block an unsigned download. Review the publisher and file before ove
 
 Open a terminal in the folder containing the executable. Run:
 
-```sh
+```sh frame="none"
 ./yuhaiin -host 127.0.0.1:50051
 ```
 
 On Windows, from PowerShell in the same folder:
 
-```powershell
+```powershell frame="none"
 .\yuhaiin.exe -host 127.0.0.1:50051
 ```
 
@@ -61,7 +61,7 @@ Try [your first connection](/documents/guides/first-connection/) before enabling
 
 The backend README describes a maintained Homebrew tap:
 
-```sh
+```sh frame="none"
 brew tap yuhaiin/yuhaiin
 brew install yuhaiin
 ```

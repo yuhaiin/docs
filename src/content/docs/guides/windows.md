@@ -11,7 +11,7 @@ A Windows desktop can use Yuhaiin through its local HTTP/SOCKS proxy or through 
 2. Extract the archive, if necessary. Open the folder in File Explorer.
 3. In that folder, open PowerShell and run the **actual downloaded filename**. For example, after renaming it to `yuhaiin.exe`:
 
-   ```powershell
+   ```powershell frame="none"
    .\yuhaiin.exe -host 127.0.0.1:50051
    ```
 
