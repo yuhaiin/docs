@@ -27,7 +27,7 @@ Open `http://127.0.0.1:50051`. Avoid running the management listener on `0.0.0.0
 
 ## Use the local proxy
 
-Create and enable a **Local** Mixed inbound under **Traffic entry → Inbounds**, generally at `127.0.0.1:9002`. Set this as the HTTP or SOCKS proxy for one application, or use **Settings → Configuration → System proxy integration** for applications that follow macOS proxy settings. Check a page load and the Connections list.
+Open **Traffic entry → Inbounds** and use the existing enabled **mixed** inbound (fresh-install default **`127.0.0.1:1080`**). Create a new listener only if the existing one is unavailable; the React **new Local preset** uses `127.0.0.1:9002` as its initial value. Set this as the HTTP or SOCKS proxy for one application, or use **Settings → Configuration → System proxy integration** for applications that follow macOS proxy settings. Check a page load and the Connections list.
 
 Do not enable both Yuhaiin and another app's automatic system proxy control without checking which settings were applied.
 
@@ -37,6 +37,6 @@ To use a virtual `utun` interface, follow [TUN](/documents/guides/tun/). On macO
 
 ## Recover
 
-Disable TUN first, then turn off system proxy integration. Quit the manual process with Ctrl+C. In macOS network settings, remove a stale HTTP/SOCKS proxy pointing to `127.0.0.1:9002` if it remained enabled after the process exited. Restarting Yuhaiin is not a substitute for removing a stale OS proxy.
+Disable TUN first, then turn off system proxy integration. Quit the manual process with Ctrl+C. In macOS network settings, remove any stale HTTP/SOCKS proxy pointing to the actual inbound address (typically `127.0.0.1:1080` on a fresh install) if it remained enabled after the process exited. Restarting Yuhaiin is not a substitute for removing a stale OS proxy.
 
 See [Network diagnostics](/documents/features/diagnostics/) for the next check.

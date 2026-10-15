@@ -7,7 +7,7 @@ Use these checks in order. Changing five settings at once makes it difficult to 
 
 ## 1. Can you open the Web UI?
 
-Start the backend with `-host 127.0.0.1:50051` and open `http://127.0.0.1:50051` **on the same device**. If the port is in use, select another port. An application proxy listening on `9002` and the Web UI on `50051` are separate things.
+Start the backend with `-host 127.0.0.1:50051` and open `http://127.0.0.1:50051` **on the same device**. If the port is in use, select another port. On a clean installation the existing Mixed application proxy listens on **`127.0.0.1:1080`**, while the management Web UI here listens on **`127.0.0.1:50051`**. An additional Local preset created in React may listen on `9002` instead. **These are different listeners.** Always check the actual inbound configuration.
 
 ## 2. Does Yuhaiin receive connections?
 

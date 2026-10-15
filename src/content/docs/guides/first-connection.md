@@ -25,8 +25,9 @@ If you already have proxy-provider settings, you can add a **SOCKS5**, **HTTP**,
 ## Step 2: Enable a local entry
 
 1. Open **Traffic entry → Inbounds**.
-2. Create a **Local** preset. It creates a Mixed HTTP/SOCKS listener, normally at `127.0.0.1:9002`.
-3. Check **Enabled** and save. The listener must be running before an application can send it traffic.
+2. On a fresh backend installation, find the existing, enabled **mixed** inbound. Its default listen address is **`127.0.0.1:1080`**. You do not need to create another inbound.
+3. Check its **Network → Host** and runtime status before proceeding. Use the address that your own configuration displays.
+4. Only if no usable inbound exists, create a **Local** preset and enable it. The React editor currently proposes `127.0.0.1:9002` for a *new* preset. This is not the backend's first-start default.
 
 Local means *on this computer*. It is not the IP address of a remote proxy provider.
 
@@ -35,10 +36,10 @@ Local means *on this computer*. It is not the IP address of a remote proxy provi
 Configure your browser or another application to use an **HTTP proxy** or **SOCKS5 proxy**:
 
 - Host: `127.0.0.1`
-- Port: `9002`
+- Port: `1080` **on an unmodified, fresh backend installation**
 - Type: HTTP or SOCKS5
 
-Use the address and port **shown in your inbound settings** if you changed the preset. Not all browsers provide independent proxy settings; some inherit your operating system's configuration.
+Always use the address and port **shown in your actual inbound settings**. Existing configurations, migrated installations and additional presets can use another port. Not all browsers provide independent proxy settings; some inherit your operating system's configuration.
 
 Visit a familiar website. Then open **Monitoring → Connections**. A new connection entry indicates that the application reached Yuhaiin.
 
@@ -53,3 +54,9 @@ If you see no connections, the application is probably not using the configured 
 - To proxy other devices on your LAN, read [Local versus LAN proxy](/documents/guides/local-proxy/).
 - To capture more system traffic, read [System-wide TUN](/documents/guides/tun/).
 - For different destinations for different websites, read [Routing rules](/documents/features/routing/).
+
+## Advanced: what establishes the default port?
+
+The backend's [`DefaultSetting()`](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/legacy/schema/config/default.go) creates the enabled `mixed` listener on `127.0.0.1:1080`. During first-start initialization, [`SqliteDB`](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/legacy/chore/sqlite_db.go) imports the default configuration into persistent SQLite state. The React [`presetInbound()`](https://github.com/yuhaiin/yuhaiin-react/blob/main/src/docs/inbound/presets.ts) is only consulted when a user creates **another** preset.
+
+For a reliable test on Linux/macOS, run `curl --proxy http://127.0.0.1:1080 https://example.com/` against an unchanged fresh configuration; on Windows use `curl.exe`. If you customized the inbound, change the port in this command. A successful response proves the proxy path works, not that a remote proxy node was selected.
