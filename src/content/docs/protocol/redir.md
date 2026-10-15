@@ -1,26 +1,49 @@
 ---
-title: Redirect (REDIR)
-description: Receives transparent redirected TCP connections on supported systems.
+title: Transparent REDIR
+description: inbound: current Yuhaiin support and configuration.
 ---
 
-Receives transparent redirected TCP connections on supported systems.
+A REDIR inbound receives traffic redirected by operating-system firewall rules. It is an advanced alternative to explicitly configuring HTTP/SOCKS proxy clients.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** inbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** inbound. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Typed inbound example
 
-Usually involves operating-system redirect rules. It is not a substitute for an app-level HTTP proxy and may need administrator permissions.
+```json
+{
+  "id": "redir-example",
+  "name": "Redirect",
+  "enabled": false,
+  "network": {
+    "type": "tcp_udp",
+    "tcp_udp": {
+      "host": "127.0.0.1:12345",
+      "udp": "tcp_only"
+    }
+  },
+  "transports": [],
+  "protocol": {
+    "type": "redir",
+    "redir": {
+      "host": ""
+    }
+  }
+}
+```
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+The example is explanatory. Adjust listen addresses, credentials and interface permissions before enabling it.
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Fields and requirements
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+1. `redir` is an inbound protocol, not a remote server.
+2. Operating-system redirect/firewall rules decide which packets reach the listener.
 
-## Further information
+## Important limits and troubleshooting
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/inbound/types.go)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+- A REDIR listener by itself does not add firewall rules or capture every application.
+- Transparent redirection may need elevated privileges and correct destination recovery.
+- Test in an isolated setup before changing a server's production firewall.
+
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/inbound/types.go) rather than examples from old releases.

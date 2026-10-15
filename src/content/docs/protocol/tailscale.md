@@ -1,26 +1,47 @@
 ---
-title: Tailscale
-description: Uses Tailscale's mesh networking and control-plane model as an outgoing connection.
+title: Tailscale outbound
+description: outbound: current Yuhaiin support and configuration.
 ---
 
-Uses Tailscale's mesh networking and control-plane model as an outgoing connection.
+Tailscale combines WireGuard-based networking with a tailnet control plane. Yuhaiin's Tailscale outbound uses its own authentication and network settings.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** outbound. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Typed outbound example
 
-Configuration involves a tailnet and authentication, not just a generic proxy URL. If you use a custom control server, confirm its capabilities and trust.
+This is a structural example, **not working credentials**. Replace placeholders and match all additional transport requirements of your remote server.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "Tailscale outbound example",
+  "origin": "manual",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "tailscale",
+      "tailscale": {
+        "auth_key": "REPLACE_AUTH_KEY",
+        "hostname": "yuhaiin-device",
+        "control_url": ""
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Fields and requirements
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+1. `auth_key`: tailnet auth key.
+2. `hostname`: name registered for this node.
+3. `control_url`: optional custom control server address.
 
-## Further information
+## Important limits and troubleshooting
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+- A Tailscale auth key is not a normal proxy server password.
+- A control URL is not automatically a public proxy gateway.
+- Respect the authentication and access policy of the tailnet operator.
+
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) rather than examples from old releases.

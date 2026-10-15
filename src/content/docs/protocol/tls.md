@@ -1,26 +1,63 @@
 ---
 title: TLS
-description: Encrypts and authenticates a connection, as used by HTTPS.
+description: outbound step and inbound transport: current Yuhaiin support and configuration.
 ---
 
-Encrypts and authenticates a connection, as used by HTTPS.
+TLS encrypts a connection and authenticates the remote endpoint using a certificate. It is frequently a middle step between a socket dialer and a proxy protocol.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** outbound step and inbound transport. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** outbound step and inbound transport. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Typed outbound example
 
-Use the actual server name and a valid certificate or trusted custom CA. The unsafe skip-verification option should not be enabled just to hide a certificate error.
+This is a structural example, **not working credentials**. Replace placeholders and match all additional transport requirements of your remote server.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "TLS example",
+  "origin": "manual",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "simple",
+      "simple": {
+        "host": "proxy.example.com",
+        "port": 443
+      }
+    },
+    {
+      "type": "tls",
+      "tls": {
+        "enable": true,
+        "servernames": [
+          "proxy.example.com"
+        ]
+      }
+    },
+    {
+      "type": "trojan",
+      "trojan": {
+        "password": "REPLACE_ME",
+        "peer": "proxy.example.com"
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Fields and requirements
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+1. `enable`: whether to enable the outbound TLS layer.
+2. `servernames`: expected certificate name(s).
+3. `ca_cert`: optional custom certificate authorities, encoded according to the backend contract.
+4. `insecure_skip_verify`: bypasses certificate verification and should normally remain false.
 
-## Further information
+## Important limits and troubleshooting
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+- TLS certificate verification must match the server name, including when dialing an IP address.
+- A successful TLS handshake alone does not prove downstream proxy authentication.
+- An inbound TLS transport uses a server certificate/private key, not the outbound client fields.
+
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) rather than examples from old releases.

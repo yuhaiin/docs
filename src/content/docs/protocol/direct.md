@@ -1,26 +1,42 @@
 ---
 title: Direct
-description: Connects to the destination using the device's normal network rather than a remote proxy.
+description: outbound: current Yuhaiin support and configuration.
 ---
 
-Connects to the destination using the device's normal network rather than a remote proxy.
+A Direct node lets Yuhaiin open network connections using the host's ordinary internet access. It is the easiest destination to test before configuring a remote proxy.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** outbound. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Typed outbound example
 
-Use this to test the inbound and routing independently of a paid or self-hosted server. Direct traffic does not conceal your public address.
+This is a structural example, **not working credentials**. Replace placeholders and match all additional transport requirements of your remote server.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "Direct example",
+  "origin": "manual",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "direct",
+      "direct": {}
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Fields and requirements
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+1. No server password or remote gateway is required.
+2. An optional network interface selector exists in the backend type.
 
-## Further information
+## Important limits and troubleshooting
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/direct)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+- Direct is not anonymous: websites see the public address of the normal internet path.
+- A Direct node still requires an inbound if you want apps to route through the local backend.
+- Routing rules can also choose Direct without selecting a remote node.
+
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) rather than examples from old releases.

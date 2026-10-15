@@ -1,26 +1,23 @@
 ---
-title: Reverse connections
-description: The current inbound API provides reverse_http and reverse_tcp protocols for specialized reverse connection setups.
+title: Reverse HTTP/TCP
+description: inbound types: current Yuhaiin support and configuration.
 ---
 
-The current inbound API provides reverse_http and reverse_tcp protocols for specialized reverse connection setups.
+Reverse HTTP and reverse TCP inbounds support specialized reverse connection topologies. They are separate variants rather than a generic automatic port forwarding switch.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** inbound variants. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** inbound types. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Fields and requirements
 
-These are not a general one-click port-forwarding service. Both ends must agree on the expected reverse connection and security model.
+1. `reverse_http` includes a URL and optional client TLS settings.
+2. `reverse_tcp` includes a target address.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+## Important limits and troubleshooting
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+- An inbound listener alone cannot bypass arbitrary NAT/firewall restrictions on a remote site.
+- Deploy only to networks and services you operate or have permission to access.
+- Use TLS and access controls where traffic crosses untrusted networks.
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
-
-## Further information
-
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/inbound/types.go)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/inbound/types.go) rather than examples from old releases.

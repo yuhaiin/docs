@@ -1,26 +1,46 @@
 ---
-title: Simple socket dialer
-description: Establishes a connection to a host and port before higher protocol layers authenticate it.
+title: Simple dialer
+description: outbound chain step: current Yuhaiin support and configuration.
 ---
 
-Establishes a connection to a host and port before higher protocol layers authenticate it.
+The `simple` step chooses where a connection is dialed. It does not itself provide a proxy protocol, encryption or VPN identity.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** outbound step. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** outbound chain step. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Typed outbound example
 
-The current Node contract uses a simple object with host and port. A simple dialer alone is not an encrypted VPN; combine it with the appropriate proxy or TLS steps.
+This is a structural example, **not working credentials**. Replace placeholders and match all additional transport requirements of your remote server.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "Simple dialer example",
+  "origin": "manual",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "simple",
+      "simple": {
+        "host": "proxy.example.com",
+        "port": 443
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Fields and requirements
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+1. `host`: hostname or IP to connect to.
+2. `port`: integer port.
+3. `alternate_host` and `network_interface`: optional advanced endpoint selection.
 
-## Further information
+## Important limits and troubleshooting
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/fixed)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+- Follow the socket dialer with a matching proxy or TLS step, if required.
+- A node with only a dialer is not an encrypted intermediary.
+- This is the first step in the frontend SOCKS5, HTTP, Shadowsocks and Trojan templates.
+
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) rather than examples from old releases.

@@ -1,26 +1,51 @@
 ---
-title: Mixed proxy
-description: Accepts HTTP and SOCKS5 application-proxy clients at the same listening address.
+title: Mixed HTTP/SOCKS listener
+description: inbound: current Yuhaiin support and configuration.
 ---
 
-Accepts HTTP and SOCKS5 application-proxy clients at the same listening address.
+The **Mixed** protocol accepts both HTTP proxy and SOCKS5 clients on a single listening port. This is the default beginner-friendly Local and LAN preset.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** inbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** inbound. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Typed inbound example
 
-The Web UI Local preset creates a Mixed listener at 127.0.0.1:9002 by default. An outbound chain has no matching mixed variant; select an HTTP or SOCKS5 outbound instead.
+```json
+{
+  "id": "local-example",
+  "name": "Local",
+  "enabled": true,
+  "network": {
+    "type": "tcp_udp",
+    "tcp_udp": {
+      "host": "127.0.0.1:9002",
+      "udp": "enabled"
+    }
+  },
+  "transports": [],
+  "protocol": {
+    "type": "mixed",
+    "mixed": {
+      "username": "",
+      "password": ""
+    }
+  }
+}
+```
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+The example is explanatory. Adjust listen addresses, credentials and interface permissions before enabling it.
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Fields and requirements
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+1. `network.tcp_udp.host`: address and port applications connect to.
+2. `protocol.type: mixed` and a matching `mixed` variant.
+3. `username` and `password`: optional inbound credentials; these are **not** remote outbound credentials.
 
-## Further information
+## Important limits and troubleshooting
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/inbound/types.go)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+- The default Local preset binds only loopback; LAN binds all interfaces and needs firewall/authentication.
+- An outbound does not have a `mixed` protocol variant. Configure a specific remote HTTP or SOCKS5 outbound instead.
+- The application must actually be configured to use this listener.
+
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/inbound/types.go) rather than examples from old releases.

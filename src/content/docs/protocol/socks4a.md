@@ -1,26 +1,23 @@
 ---
 title: SOCKS4a
-description: A legacy application-proxy protocol that can forward hostname-based TCP requests.
+description: inbound: current Yuhaiin support and configuration.
 ---
 
-A legacy application-proxy protocol that can forward hostname-based TCP requests.
+SOCKS4a is a legacy TCP application proxy protocol capable of accepting hostnames from old clients.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** inbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** inbound. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Fields and requirements
 
-The current inbound type includes socks4a, but the current outbound chain does not have an independent socks4a type. Prefer SOCKS5 when the client supports it.
+1. The current inbound protocol contract contains `socks4a`, with a username option.
+2. Use an appropriate listening network and bind address.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+## Important limits and troubleshooting
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+- SOCKS4a is not a replacement for SOCKS5 UDP associate.
+- The current outbound typed protocol list has no independent SOCKS4a variant.
+- Modern applications should generally use SOCKS5 or HTTP proxies instead.
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
-
-## Further information
-
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/inbound/types.go)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/inbound/types.go) rather than examples from old releases.

@@ -1,26 +1,60 @@
 ---
 title: VLESS
-description: A V2Ray-family proxy protocol often combined with TLS or REALITY.
+description: outbound: current Yuhaiin support and configuration.
 ---
 
-A V2Ray-family proxy protocol often combined with TLS or REALITY.
+VLESS is a light proxy protocol whose payload protection depends on its transport; a plain unencrypted chain should not be assumed private.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** outbound. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Typed outbound example
 
-VLESS has no general-purpose built-in encryption. Use the exact compatible security and transport arrangement from your provider.
+This is a structural example, **not working credentials**. Replace placeholders and match all additional transport requirements of your remote server.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "VLESS example",
+  "origin": "manual",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "simple",
+      "simple": {
+        "host": "proxy.example.com",
+        "port": 443
+      }
+    },
+    {
+      "type": "tls",
+      "tls": {
+        "enable": true,
+        "servernames": [
+          "proxy.example.com"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "vless": {
+        "uuid": "00000000-0000-0000-0000-000000000000"
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Fields and requirements
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+1. `uuid`: the account ID issued by the server.
+2. TLS/REALITY credentials belong to separate chain steps, not inside the VLESS object.
 
-## Further information
+## Important limits and troubleshooting
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/vless)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+- Use the transport actually deployed on the server. Ordinary TLS and REALITY are not interchangeable.
+- A VLESS UUID is a secret credential; do not post it with a screenshot.
+- The current backend contract exposes VLESS as an outbound protocol step.
+
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) rather than examples from old releases.

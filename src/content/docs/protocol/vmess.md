@@ -1,26 +1,63 @@
 ---
 title: VMess
-description: A V2Ray-family proxy protocol with its own authentication and security settings.
+description: outbound: current Yuhaiin support and configuration.
 ---
 
-A V2Ray-family proxy protocol with its own authentication and security settings.
+VMess authenticates an outgoing connection with a UUID and protocol-specific security settings. The server's transport (raw socket, TLS, WebSocket or other layer) is configured as part of the chain.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** outbound. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Typed outbound example
 
-Set the UUID and security choices to match the server, and preserve the correct order of socket, TLS/WebSocket and VMess steps.
+This is a structural example, **not working credentials**. Replace placeholders and match all additional transport requirements of your remote server.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "VMess example",
+  "origin": "manual",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "simple",
+      "simple": {
+        "host": "proxy.example.com",
+        "port": 443
+      }
+    },
+    {
+      "type": "tls",
+      "tls": {
+        "enable": true,
+        "servernames": [
+          "proxy.example.com"
+        ]
+      }
+    },
+    {
+      "type": "vmess",
+      "vmess": {
+        "id": "00000000-0000-0000-0000-000000000000",
+        "aid": "0",
+        "security": "auto"
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Fields and requirements
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+1. `id`: UUID supplied by the server (the example all-zero UUID is only a placeholder).
+2. `aid`: alter ID serialized as a string in the current node contract.
+3. `security`: the VMess security mode configured on the server.
 
-## Further information
+## Important limits and troubleshooting
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/vmess)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+- The endpoint, TLS name and encryption settings must all match the server.
+- Some deployments use WebSocket; add its chain step only when the server requires it.
+- This is not a server-side inbound protocol in the current typed inbound contract.
+
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) rather than examples from old releases.

@@ -1,26 +1,23 @@
 ---
-title: Transparent proxy (TPROXY)
-description: Accepts redirected traffic using platform-level transparent proxy routing.
+title: TPROXY
+description: inbound: current Yuhaiin support and configuration.
 ---
 
-Accepts redirected traffic using platform-level transparent proxy routing.
+Linux transparent proxying (TPROXY) can intercept packets while retaining original destination metadata. It requires policy routing and firewall rules in addition to Yuhaiin.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** inbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** inbound. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Fields and requirements
 
-Typically a Linux advanced deployment with policy routing and firewall rules. It is not the same as ordinary HTTP/SOCKS listening, and it can disrupt host networking if configured incorrectly.
+1. The inbound protocol contract has host, DNS hijacking and Force FakeIP options.
+2. Use the matching OS listen/network options and firewall rules for your deployment.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+## Important limits and troubleshooting
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+- TPROXY is not a Windows/macOS one-click proxy feature.
+- Missing routing marks or policy tables often mean the inbound never sees traffic.
+- Never flush unrelated firewall rules during troubleshooting; use a reversible setup.
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
-
-## Further information
-
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/inbound/types.go)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/inbound/types.go) rather than examples from old releases.

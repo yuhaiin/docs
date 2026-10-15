@@ -1,22 +1,44 @@
 ---
-title: Yamux (multiplexing)
-description: Multiplexing can carry several logical streams through a smaller number of connections.
+title: Yamux and multiplexing
+description: historical term: current Yuhaiin support and configuration.
 ---
 
-Multiplexing can carry several logical streams through a smaller number of connections.
+Yamux is an underlying multiplexing implementation concept. The current typed configuration exposes `mux` instead of a JSON type named `yamux`.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** multiplexing concept, not a named current node protocol. This page is retained so existing links explain the change instead of showing obsolete instructions.
+**Support:** historical term. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Typed outbound example
 
-The current outbound contract uses mux, and the inbound transport contract also uses mux. The old yamux label is not a JSON type to paste into these contracts.
+This is a structural example, **not working credentials**. Replace placeholders and match all additional transport requirements of your remote server.
 
-Do not copy old JSON examples from this topic. See the [current protocol catalog](/documents/protocol/) and [configuration model](/documents/reference/configuration/).
+```json
+{
+  "id": "example-node",
+  "name": "Yamux and multiplexing example",
+  "origin": "manual",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "mux",
+      "mux": {
+        "concurrency": 4
+      }
+    }
+  ]
+}
+```
 
-## Further information
+## Fields and requirements
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+1. `mux` is an outbound variant with optional concurrency.
+2. `mux` also exists as an inbound transport type.
+
+## Important limits and troubleshooting
+
+- Both ends must agree on multiplexing support.
+- Multiplexing does not automatically improve performance on every network.
+- Do not use `yamux` as a protocol type in current node JSON.
+
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) rather than examples from old releases.

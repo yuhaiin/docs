@@ -1,26 +1,51 @@
 ---
 title: Cloudflare WARP / MASQUE
-description: Connects to Cloudflare WARP using the dedicated cloudflare_warp_masque outbound type.
+description: outbound: current Yuhaiin support and configuration.
 ---
 
-Connects to Cloudflare WARP using the dedicated cloudflare_warp_masque outbound type.
+This is Yuhaiin's dedicated Cloudflare WARP MASQUE outbound. Its configuration uses WARP account and edge parameters, not generic proxy hostname/password fields.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** outbound. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Typed outbound example
 
-This is not the same JSON object as ordinary WireGuard. Use WARP-specific credentials and endpoint parameters provided by your setup.
+This is a structural example, **not working credentials**. Replace placeholders and match all additional transport requirements of your remote server.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "Cloudflare WARP / MASQUE example",
+  "origin": "manual",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "cloudflare_warp_masque",
+      "cloudflare_warp_masque": {
+        "private_key": "REPLACE_PRIVATE_KEY",
+        "endpoint": "engage.cloudflareclient.com:2408",
+        "endpoint_public_key": "REPLACE_EDGE_PUBLIC_KEY",
+        "local_addresses": [
+          "172.16.0.2/32"
+        ]
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Fields and requirements
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+1. `private_key`: private account material.
+2. `endpoint`: Cloudflare edge endpoint.
+3. `endpoint_public_key`: public key expected for that endpoint.
+4. `local_addresses`: assigned internal tunnel prefixes, not a public proxy IP.
 
-## Further information
+## Important limits and troubleshooting
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+- WARP MASQUE and ordinary WireGuard/WARP WireGuard are different transports.
+- Credentials and address assignments must come from a working WARP account/setup.
+- The node does not grant access to arbitrary Cloudflare Zero Trust organizations without authorization.
+
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) rather than examples from old releases.

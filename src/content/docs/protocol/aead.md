@@ -1,26 +1,45 @@
 ---
-title: AEAD transport
-description: A password-protected authenticated-encryption layer used as part of a larger connection.
+title: AEAD layer
+description: outbound step and inbound transport: current Yuhaiin support and configuration.
 ---
 
-A password-protected authenticated-encryption layer used as part of a larger connection.
+AEAD stands for authenticated encryption with associated data. In Yuhaiin it is an optional authenticated encryption layer layered over an existing connection.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** outbound step and inbound transport. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** outbound step and inbound transport. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Typed outbound example
 
-AEAD must use matching keys and cipher configuration at both endpoints. It does not itself identify the remote server or replace the listener/network configuration.
+This is a structural example, **not working credentials**. Replace placeholders and match all additional transport requirements of your remote server.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "AEAD layer example",
+  "origin": "manual",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "aead",
+      "aead": {
+        "password": "REPLACE_ME",
+        "crypto_method": "aes-256-gcm"
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Fields and requirements
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+1. `password`: agreed secret.
+2. `crypto_method`: encryption method supported by both endpoints.
 
-## Further information
+## Important limits and troubleshooting
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/aead)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+- AEAD cannot independently select the remote server endpoint.
+- A different password/method on each end results in an authentication or decryption error.
+- Do not mistake generic AEAD layering for Shadowsocks cipher settings; they are separate contract variants.
+
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) rather than examples from old releases.

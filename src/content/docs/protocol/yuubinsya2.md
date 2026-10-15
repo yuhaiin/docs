@@ -1,22 +1,22 @@
 ---
-title: Yuubinsya2 (legacy topic)
-description: The older documentation mentioned a second-generation Yuubinsya protocol.
+title: Yuubinsya2 (legacy reference)
+description: historical topic: current Yuhaiin support and configuration.
 ---
 
-The older documentation mentioned a second-generation Yuubinsya protocol.
+This historical page named a separate generation of Yuubinsya. The current typed backend protocol union exposes `yuubinsya` but does not contain `yuubinsya2`.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** not a standalone current typed variant. This page is retained so existing links explain the change instead of showing obsolete instructions.
+**Support:** historical topic. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Fields and requirements
 
-The current node/inbound protocol contract declares yuubinsya, not yuubinsya2. Do not invent a separate configuration block for it.
+1. For current client/server setup use the Yuubinsya page.
+2. Check exact protocol versions at both ends rather than inferring backward compatibility.
 
-Do not copy old JSON examples from this topic. See the [current protocol catalog](/documents/protocol/) and [configuration model](/documents/reference/configuration/).
+## Important limits and troubleshooting
 
-## Further information
+- Retained for existing bookmarks; no `yuubinsya2` JSON example is provided because that variant is not part of the current contracts.
+- Do not use an undocumented second-generation protocol name in API requests.
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) rather than examples from old releases.

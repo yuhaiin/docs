@@ -1,26 +1,59 @@
 ---
 title: ShadowsocksR
-description: A Shadowsocks-derived protocol with additional obfuscation and authentication settings.
+description: outbound: current Yuhaiin support and configuration.
 ---
 
-A Shadowsocks-derived protocol with additional obfuscation and authentication settings.
+ShadowsocksR adds legacy obfuscation and authentication modes around the Shadowsocks family. Use it only with servers that explicitly support ShadowsocksR.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** outbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** outbound. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Typed outbound example
 
-Besides server and port, configure method, password, obfs and protocol as specified by your provider. Do not treat Shadowsocks and ShadowsocksR configurations as interchangeable.
+This is a structural example, **not working credentials**. Replace placeholders and match all additional transport requirements of your remote server.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "ShadowsocksR example",
+  "origin": "manual",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "simple",
+      "simple": {
+        "host": "proxy.example.com",
+        "port": 8388
+      }
+    },
+    {
+      "type": "shadowsocksr",
+      "shadowsocksr": {
+        "server": "proxy.example.com",
+        "port": "8388",
+        "method": "aes-256-cfb",
+        "password": "REPLACE_ME",
+        "obfs": "plain",
+        "obfsparam": "",
+        "protocol": "origin",
+        "protoparam": ""
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Fields and requirements
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+1. `server`, `port`: server address and string-form port as defined in the current contract.
+2. `method`, `password`: encryption and secret.
+3. `obfs`, `obfsparam`, `protocol`, `protoparam`: matching server-side modes.
 
-## Further information
+## Important limits and troubleshooting
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/shadowsocksr)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+- ShadowsocksR and Shadowsocks are not drop-in interchangeable.
+- Cipher/mode combinations are legacy; choose a newer supported protocol if you control both ends.
+- If a server rejects the connection, inspect the obfs/protocol values before modifying TLS or DNS.
+
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) rather than examples from old releases.

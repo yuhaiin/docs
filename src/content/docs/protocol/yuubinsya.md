@@ -1,26 +1,54 @@
 ---
 title: Yuubinsya
-description: Yuhaiin's custom proxy protocol for TCP and UDP connections.
+description: inbound and outbound: current Yuhaiin support and configuration.
 ---
 
-Yuhaiin's custom proxy protocol for TCP and UDP connections.
+Yuubinsya is a Yuhaiin-specific client/server proxy protocol. Use it only with a compatible endpoint; HTTP/SOCKS clients cannot speak Yuubinsya directly.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** outbound and inbound. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** inbound and outbound. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Typed outbound example
 
-A client uses the yuubinsya protocol step and a matching server-side Yuubinsya inbound. Configure the password and UDP settings consistently. Custom transport layers must match on both sides.
+This is a structural example, **not working credentials**. Replace placeholders and match all additional transport requirements of your remote server.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "Yuubinsya example",
+  "origin": "manual",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "simple",
+      "simple": {
+        "host": "proxy.example.com",
+        "port": 443
+      }
+    },
+    {
+      "type": "yuubinsya",
+      "yuubinsya": {
+        "password": "REPLACE_ME",
+        "udp_over_stream": false,
+        "udp_coalesce": false
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Fields and requirements
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+1. The outbound uses `password`, optional `udp_over_stream`, and `udp_coalesce`.
+2. The inbound uses a separately typed `yuubinsya` protocol object with password and UDP coalescing options.
+3. Transport-layer TLS, QUIC, HTTP/2 or other wrappers must agree on both sides.
 
-## Further information
+## Important limits and troubleshooting
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/yuubinsya)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+- This is not automatically compatible with arbitrary V2Ray or HTTP proxy servers.
+- A mismatch in UDP handling can affect datagram connections even when TCP succeeds.
+- Do not confuse this named variant with the obsolete `yuubinsya2` topic.
+
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) rather than examples from old releases.

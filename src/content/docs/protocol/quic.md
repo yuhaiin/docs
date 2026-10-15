@@ -1,26 +1,50 @@
 ---
-title: QUIC
-description: A transport based on UDP and TLS that supports multiplexed streams.
+title: QUIC transport
+description: outbound step and inbound network: current Yuhaiin support and configuration.
 ---
 
-A transport based on UDP and TLS that supports multiplexed streams.
+QUIC provides an encrypted UDP-based transport with multiplexed streams. Yuhaiin exposes QUIC separately from its Hysteria 2 proxy protocol.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** outbound step and inbound network. This capability is represented in the current backend; availability in a particular app depends on its version and server compatibility.
+**Support:** outbound step and inbound network. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Typed outbound example
 
-QUIC transport is not interchangeable with Hysteria 2, which is a complete QUIC-based protocol with its own authentication and negotiation.
+This is a structural example, **not working credentials**. Replace placeholders and match all additional transport requirements of your remote server.
 
-For a supported outbound, open **Destinations → Nodes**, choose a suitable template or custom chain, configure the endpoint and credentials, and save. For a supported inbound, open **Traffic entry → Inbounds** and verify that its network, transports and protocol are compatible.
+```json
+{
+  "id": "example-node",
+  "name": "QUIC transport example",
+  "origin": "manual",
+  "enabled": true,
+  "chain": [
+    {
+      "type": "quic",
+      "quic": {
+        "host": "proxy.example.com:443",
+        "tls": {
+          "enable": true,
+          "servernames": [
+            "proxy.example.com"
+          ]
+        }
+      }
+    }
+  ]
+}
+```
 
-An outbound node uses a typed `chain` array. An inbound uses distinct `network`, `transports` and `protocol` objects. Older examples using `protocols` or a top-level `tcpudp` and protocol object will not represent the current API.
+## Fields and requirements
 
-Test with [Connections and diagnostics](/documents/features/diagnostics/) before enabling complicated rules. If the server rejects authentication or TLS negotiation, validate its credentials and version first.
+1. `host`: remote QUIC endpoint.
+2. `tls`: QUIC's authentication settings for the outbound variant.
 
-## Further information
+## Important limits and troubleshooting
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/quic)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+- QUIC needs a working UDP path. A TCP-only upstream proxy will not automatically carry it.
+- A QUIC step alone is not an authenticated Hysteria 2 account.
+- For a QUIC listener, the inbound network has its own `quic` variant and server TLS settings.
+
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) rather than examples from old releases.

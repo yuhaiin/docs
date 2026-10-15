@@ -1,22 +1,23 @@
 ---
-title: gRPC (legacy topic)
-description: The old gRPC page described a transport that could be configured independently.
+title: gRPC (legacy reference)
+description: historical topic: current Yuhaiin support and configuration.
 ---
 
-The old gRPC page described a transport that could be configured independently.
+Earlier documentation described gRPC as an independently selectable proxy transport. The current node/inbound typed protocol list does **not** expose a `grpc` variant.
 
-## Support and purpose
+## Where it fits
 
-**Current contract:** not a standalone typed protocol in the current contracts. This page is retained so existing links explain the change instead of showing obsolete instructions.
+**Support:** historical topic. Consult the [Node editor](/documents/features/nodes/) for outgoing chain steps and [Inbounds](/documents/features/inbounds/) for traffic entry.
 
-## What to configure
+## Fields and requirements
 
-The current outbound protocol union and inbound transport union do not declare a gRPC variant. Do not paste old gRPC JSON; use only variants offered by your backend and frontend.
+1. Use a compatible transport currently exposed in the backend, such as HTTP/2, when your server specifically supports it.
+2. Do not paste a legacy `grpc` field into current node JSON.
 
-Do not copy old JSON examples from this topic. See the [current protocol catalog](/documents/protocol/) and [configuration model](/documents/reference/configuration/).
+## Important limits and troubleshooting
 
-## Further information
+- This page remains published to explain older links.
+- A website's gRPC support does not imply it is compatible with Yuhaiin's HTTP/2 proxy transport.
+- Refer to the current protocol contracts for supported variants.
 
-- [Current backend implementation or contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go)
-- [Node and subscription guide](/documents/features/nodes/)
-- [Supported VPN outbounds](/documents/reference/vpn-protocols/)
+When testing, first confirm that the application reaches an enabled inbound. Then check the route target, outbound credentials and [Network diagnostics](/documents/features/diagnostics/). The frontend UI can differ by platform, so use the supported fields from the [current Go contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) rather than examples from old releases.
