@@ -32,7 +32,7 @@ jobs:
           publish_branch: main
           enable_jekyll: false
           destination_dir: documents
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: static-docs
