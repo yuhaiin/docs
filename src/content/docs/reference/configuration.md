@@ -26,7 +26,7 @@ Example **shape** for a simple Direct node (illustrative; generated IDs may diff
 }
 ```
 
-A proxy node might begin with `{ "type": "simple", "simple": { "host": "proxy.example.com", "port": 1080 } }` and then use `{ "type": "socks5", "socks5": { "username": "", "password": "" } }`. Use the node editor rather than assuming fields from an older guide.
+A proxy node might begin with `{ "type": "simple", "simple": { "host": "proxy.example.com", "port": 1080 } }` and then use `{ "type": "socks5", "socks5": { "user": "", "password": "" } }`. Use the node editor rather than assuming fields from an older guide.
 
 Source: [Node contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go).
 
