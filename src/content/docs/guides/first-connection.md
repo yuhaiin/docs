@@ -18,6 +18,8 @@ Start Yuhaiin and open the local [Web UI](/documents/guides/install/). The sideb
 
 **Direct** means that Yuhaiin connects to the website using this computer's internet connection. It does not hide your public IP address.
 
+Open **Routing → Route rules** and review **Unmatched traffic**. To use your selected node for traffic without a matching rule, set the default mode to **Proxy** and set its default target appropriately. If the mode is **Direct**, a remote proxy node you selected may never be used. Save and apply any pending changes.
+
 If you already have proxy-provider settings, you can add a **SOCKS5**, **HTTP**, **Shadowsocks**, **Trojan** or other supported node instead. The provider must give you the address, port and any required credentials. See [Nodes and subscriptions](/documents/features/nodes/).
 
 ## Step 2: Enable a local entry
