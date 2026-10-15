@@ -9,7 +9,7 @@ On Linux, start with a local application proxy. TUN, transparent redirect and TP
 
 Choose a release for your CPU from [the official release list](https://github.com/yuhaiin/yuhaiin/releases). For a typical 64-bit Intel/AMD system use a Linux **amd64** build; for many ARM systems use **arm64**. Rename the executable to `yuhaiin`, then:
 
-```sh
+```sh frame="none"
 chmod +x ./yuhaiin
 ./yuhaiin -host 127.0.0.1:50051
 ```
@@ -22,7 +22,7 @@ Open `http://127.0.0.1:50051` on the same device. To keep configuration in a spe
 2. Configure and enable a Local Mixed inbound, normally `127.0.0.1:9002`.
 3. Run a simple request through that inbound:
 
-   ```sh
+   ```sh frame="none"
    curl --proxy http://127.0.0.1:9002 https://example.com/
    ```
 
