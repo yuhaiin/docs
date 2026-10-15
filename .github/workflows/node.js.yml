@@ -1,52 +1,42 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: Node.js CI
+name: Docs CI
 
 on:
   push:
-    branches: ["main"]
+    branches: [main]
   pull_request:
-    branches: ["main"]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [23.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
       - uses: actions/checkout@v6
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-
-      - run: npm install --force
-
+          node-version: '24'
+      # Resolve current dependencies; npm install also refreshes the lockfile
+      # when a dependency range changes.
+      - run: npm install --no-audit --no-fund
+      - run: npm run check:links
       - run: npm run build
-        env:
-          CI: false
-
       - name: Deploy
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
-        if: github.event_name != 'pull_request'
         with:
           personal_token: ${{ secrets.PERSONAL_TOKEN }}
           publish_dir: ./dist
           external_repository: yuhaiin/yuhaiin.github.io
-          publish_branch: main # default: gh-pages
+          publish_branch: main
           enable_jekyll: false
           destination_dir: documents
-
-      - name: upload_static
+      - name: Upload build
+        if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: statics
-          path: |
-            dist
+          name: static-docs
+          path: dist/
+          if-no-files-found: ignore
