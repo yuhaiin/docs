@@ -1,6 +1,6 @@
 ---
-title: Linux: first setup
-description: Set up the CLI, user proxy and optional Linux TUN configuration.
+title: "Linux: first setup"
+description: "Set up the CLI, user proxy and optional Linux TUN configuration."
 ---
 
 On Linux, start with a local application proxy. TUN, transparent redirect and TPROXY are more involved because they can alter routing and firewall state.

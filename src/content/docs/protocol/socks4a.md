@@ -1,6 +1,6 @@
 ---
-title: SOCKS4a
-description: inbound: current Yuhaiin support and configuration.
+title: "SOCKS4a"
+description: "inbound: current Yuhaiin support and configuration."
 ---
 
 SOCKS4a is a legacy TCP application proxy protocol capable of accepting hostnames from old clients.

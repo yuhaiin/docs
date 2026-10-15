@@ -1,6 +1,6 @@
 ---
-title: gRPC (legacy reference)
-description: historical topic: current Yuhaiin support and configuration.
+title: "gRPC (legacy reference)"
+description: "historical topic: current Yuhaiin support and configuration."
 ---
 
 Earlier documentation described gRPC as an independently selectable proxy transport. The current node/inbound typed protocol list does **not** expose a `grpc` variant.

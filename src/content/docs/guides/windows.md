@@ -1,6 +1,6 @@
 ---
-title: Windows: first setup
-description: Run Yuhaiin safely on Windows and connect a browser.
+title: "Windows: first setup"
+description: "Run Yuhaiin safely on Windows and connect a browser."
 ---
 
 A Windows desktop can use Yuhaiin through its local HTTP/SOCKS proxy or through a TUN adapter. Begin with a local proxy; administrator privileges are not needed for ordinary application proxy use.

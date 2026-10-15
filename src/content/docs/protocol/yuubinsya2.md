@@ -1,6 +1,6 @@
 ---
-title: Yuubinsya2 (legacy reference)
-description: historical topic: current Yuhaiin support and configuration.
+title: "Yuubinsya2 (legacy reference)"
+description: "historical topic: current Yuhaiin support and configuration."
 ---
 
 This historical page named a separate generation of Yuubinsya. The current typed backend protocol union exposes `yuubinsya` but does not contain `yuubinsya2`.

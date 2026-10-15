@@ -1,6 +1,6 @@
 ---
-title: Yamux and multiplexing
-description: historical term: current Yuhaiin support and configuration.
+title: "Yamux and multiplexing"
+description: "historical term: current Yuhaiin support and configuration."
 ---
 
 Yamux is an underlying multiplexing implementation concept. The current typed configuration exposes `mux` instead of a JSON type named `yamux`.

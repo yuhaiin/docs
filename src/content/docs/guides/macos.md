@@ -1,6 +1,6 @@
 ---
-title: macOS: first setup
-description: Apple Silicon and Intel Mac installation, local proxy, and TUN permissions.
+title: "macOS: first setup"
+description: "Apple Silicon and Intel Mac installation, local proxy, and TUN permissions."
 ---
 
 For a first test on macOS, run Yuhaiin locally and configure just one app. TUN and system-wide network routes can be enabled later.
