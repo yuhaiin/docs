@@ -1,6 +1,6 @@
 ---
-title: QUIC transport
-description: outbound step and inbound network: current Yuhaiin support and configuration.
+title: "QUIC transport"
+description: "outbound step and inbound network: current Yuhaiin support and configuration."
 ---
 
 QUIC provides an encrypted UDP-based transport with multiplexed streams. Yuhaiin exposes QUIC separately from its Hysteria 2 proxy protocol.

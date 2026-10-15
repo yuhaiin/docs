@@ -1,6 +1,6 @@
 ---
-title: ShadowsocksR
-description: outbound: current Yuhaiin support and configuration.
+title: "ShadowsocksR"
+description: "outbound: current Yuhaiin support and configuration."
 ---
 
 ShadowsocksR adds legacy obfuscation and authentication modes around the Shadowsocks family. Use it only with servers that explicitly support ShadowsocksR.

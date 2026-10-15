@@ -1,6 +1,6 @@
 ---
-title: REALITY
-description: outbound step and inbound transport: current Yuhaiin support and configuration.
+title: "REALITY"
+description: "outbound step and inbound transport: current Yuhaiin support and configuration."
 ---
 
 REALITY is an authentication and camouflage layer that works only with a compatible peer. It is often used in a chain alongside a proxy protocol such as VLESS.

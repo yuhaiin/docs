@@ -1,6 +1,6 @@
 ---
-title: VMess
-description: outbound: current Yuhaiin support and configuration.
+title: "VMess"
+description: "outbound: current Yuhaiin support and configuration."
 ---
 
 VMess authenticates an outgoing connection with a UUID and protocol-specific security settings. The server's transport (raw socket, TLS, WebSocket or other layer) is configured as part of the chain.

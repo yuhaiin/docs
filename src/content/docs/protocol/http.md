@@ -1,6 +1,6 @@
 ---
-title: HTTP proxy
-description: Proxy inbound and outbound: configuration fields, example, limits and testing.
+title: "HTTP proxy"
+description: "Proxy inbound and outbound: configuration fields, example, limits and testing."
 ---
 
 An HTTP proxy supports ordinary web requests and the CONNECT method for tunneling TCP streams. It is not the same as a full-device VPN.

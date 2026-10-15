@@ -1,6 +1,6 @@
 ---
-title: Trojan
-description: TLS proxy outbound: configuration fields, example, limits and testing.
+title: "Trojan"
+description: "TLS proxy outbound: configuration fields, example, limits and testing."
 ---
 
 Trojan commonly sends a password-authenticated connection through a TLS transport. The frontend template provides a `simple → tls → trojan` chain.

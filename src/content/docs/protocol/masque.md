@@ -1,6 +1,6 @@
 ---
-title: Cloudflare WARP / MASQUE
-description: outbound: current Yuhaiin support and configuration.
+title: "Cloudflare WARP / MASQUE"
+description: "outbound: current Yuhaiin support and configuration."
 ---
 
 This is Yuhaiin's dedicated Cloudflare WARP MASQUE outbound. Its configuration uses WARP account and edge parameters, not generic proxy hostname/password fields.

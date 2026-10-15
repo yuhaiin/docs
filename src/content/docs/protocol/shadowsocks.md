@@ -1,6 +1,6 @@
 ---
-title: Shadowsocks
-description: Proxy outbound: configuration fields, example, limits and testing.
+title: "Shadowsocks"
+description: "Proxy outbound: configuration fields, example, limits and testing."
 ---
 
 Shadowsocks is an encrypted proxy. In Yuhaiin's current node model, the client normally uses a simple network dialer followed by a Shadowsocks protocol step.

@@ -1,6 +1,6 @@
 ---
-title: SOCKS5
-description: Proxy inbound and outbound: configuration fields, example, limits and testing.
+title: "SOCKS5"
+description: "Proxy inbound and outbound: configuration fields, example, limits and testing."
 ---
 
 SOCKS5 is an application proxy. The backend can accept SOCKS5 inbound traffic, or connect to a remote SOCKS5 server as an outbound.

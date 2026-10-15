@@ -1,6 +1,6 @@
 ---
-title: TLS
-description: outbound step and inbound transport: current Yuhaiin support and configuration.
+title: "TLS"
+description: "outbound step and inbound transport: current Yuhaiin support and configuration."
 ---
 
 TLS encrypts a connection and authenticates the remote endpoint using a certificate. It is frequently a middle step between a socket dialer and a proxy protocol.

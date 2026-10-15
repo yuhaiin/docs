@@ -1,6 +1,6 @@
 ---
-title: WebSocket
-description: outbound step and inbound transport: current Yuhaiin support and configuration.
+title: "WebSocket"
+description: "outbound step and inbound transport: current Yuhaiin support and configuration."
 ---
 
 WebSocket wraps an application protocol in HTTP upgrade framing. It does not identify or authenticate a proxy on its own.

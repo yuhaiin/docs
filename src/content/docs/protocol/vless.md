@@ -1,6 +1,6 @@
 ---
-title: VLESS
-description: outbound: current Yuhaiin support and configuration.
+title: "VLESS"
+description: "outbound: current Yuhaiin support and configuration."
 ---
 
 VLESS is a light proxy protocol whose payload protection depends on its transport; a plain unencrypted chain should not be assumed private.
