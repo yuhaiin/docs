@@ -34,7 +34,7 @@ A TLS transport does not turn a SOCKS proxy into a generic HTTPS proxy. Both end
   "id": "local-mixed",
   "name": "Local",
   "enabled": true,
-  "network": { "type": "tcp_udp", "tcp_udp": { "host": "127.0.0.1:9002", "udp": "enabled" } },
+  "network": { "type": "tcp_udp", "tcp_udp": { "host": "127.0.0.1:1080", "udp": "enabled" } },
   "transports": [],
   "protocol": { "type": "mixed", "mixed": { "username": "", "password": "" } }
 }
@@ -45,3 +45,9 @@ The example shows the resource shape; let the Web UI or API choose unique resour
 ## Security
 
 Transparent redirection and TUN may require system routes, firewall rules or elevated permissions. LAN-facing listeners should be firewall-restricted and authenticated when supported. Review [Security](/documents/guides/security/) and [Network recovery](/documents/guides/recover-network/).
+
+## Default, template and runtime are three different things
+
+The JSON above matches the **backend's initial `mixed` listener** (`127.0.0.1:1080`). A newly created **Local** preset in the React UI uses `127.0.0.1:9002`. Neither is a universal port: users can edit and persist the bind address, or fail to bind the requested port.
+
+When debugging startup, trace [`DefaultSetting`](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/legacy/schema/config/default.go) → [`SqliteDB` import/migration](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/legacy/chore/sqlite_db.go) → [`InboundStore`](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/store/inbound.go) → [`ContractStore.Sync()`](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/inbound/contract_store.go). A successful schema validation does not prove a socket was bound; inspect the runtime events and listener status.

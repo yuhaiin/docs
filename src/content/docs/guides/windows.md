@@ -21,7 +21,7 @@ If Windows warns about an unfamiliar application, verify the release source befo
 
 ## Configure one browser
 
-Follow [Your first connection](/documents/guides/first-connection/). The **Local** inbound preset normally listens on `127.0.0.1:9002`. Point your browser or its OS proxy settings to that address. Open **Monitoring → Connections** to confirm traffic enters Yuhaiin.
+Follow [Your first connection](/documents/guides/first-connection/). The backend normally starts with an enabled `mixed` inbound at **`127.0.0.1:1080`**. Check **Traffic entry → Inbounds** for its actual address, then point your browser or OS proxy settings there. The separate **new Local preset** offered by the React editor starts at `127.0.0.1:9002`, but it is not required for a fresh installation. Open **Monitoring → Connections** to confirm traffic enters Yuhaiin.
 
 In **Settings → Configuration**, the HTTP and SOCKS5 **System proxy integration** options can request Windows proxy integration. They are not the same as a full VPN: some apps ignore system proxy settings. Revert them if another proxy tool already owns the system settings.
 

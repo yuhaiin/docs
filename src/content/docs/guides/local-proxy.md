@@ -7,13 +7,15 @@ An **inbound** is the address at which Yuhaiin accepts connections from applicat
 
 ## Local mode (recommended)
 
-Go to **Traffic entry → Inbounds** and choose the **Local** preset. This creates a Mixed listener on `127.0.0.1:9002` by default. Mixed supports HTTP and SOCKS5 on the same listening port.
+Open **Traffic entry → Inbounds** and first inspect the **existing `mixed` inbound**. The Go backend's fresh-install default enables Mixed HTTP/SOCKS on **`127.0.0.1:1080`**; you do not need to create a new listener. Mixed accepts both HTTP and SOCKS5 proxy clients on the same port.
+
+If you explicitly create **another Local preset** in the React editor, its initial address is currently `127.0.0.1:9002`. That is a **new-preset default**, not the backend's initial listener. Check for an existing listener on that port before saving.
 
 Configure each application to use the address and port shown on the inbound page. If it does not have proxy settings, use the operating system proxy or a [TUN inbound](/documents/guides/tun/) instead.
 
 ## LAN mode (advanced)
 
-The **LAN** preset normally listens on `0.0.0.0:9002`, meaning other devices may reach it via this computer's LAN IP address. On the other device, enter the Yuhaiin computer's actual LAN address, **not** `0.0.0.0`.
+A **new LAN preset** in the React editor initially listens on `0.0.0.0:9002`, meaning other devices may reach it via this computer's LAN IP address. On the other device, enter the Yuhaiin computer's actual LAN address, **not** `0.0.0.0`.
 
 **Security warning:** A listener bound to all interfaces may be accessible beyond your home network, depending on your firewall. Configure authentication and firewall restrictions before enabling it. Do not forward the port on your router or expose an unauthenticated proxy to the internet.
 

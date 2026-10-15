@@ -3,7 +3,7 @@ title: "Mixed HTTP/SOCKS listener"
 description: "inbound: current Yuhaiin support and configuration."
 ---
 
-The **Mixed** protocol accepts both HTTP proxy and SOCKS5 clients on a single listening port. This is the default beginner-friendly Local and LAN preset.
+The **Mixed** protocol accepts both HTTP proxy and SOCKS5 clients on a single listening port. On a clean backend installation, the already-enabled `mixed` listener binds `127.0.0.1:1080`. The React editor also offers separate **new Local** and **new LAN** presets with their own initial addresses.
 
 ## Where it fits
 
@@ -19,7 +19,7 @@ The **Mixed** protocol accepts both HTTP proxy and SOCKS5 clients on a single li
   "network": {
     "type": "tcp_udp",
     "tcp_udp": {
-      "host": "127.0.0.1:9002",
+      "host": "127.0.0.1:1080",
       "udp": "enabled"
     }
   },
@@ -34,7 +34,7 @@ The **Mixed** protocol accepts both HTTP proxy and SOCKS5 clients on a single li
 }
 ```
 
-The example is explanatory. Adjust listen addresses, credentials and interface permissions before enabling it.
+This example represents the **backend first-start listener**, not the React editor's new preset. A newly created Local preset starts with `127.0.0.1:9002`, and a new LAN preset with `0.0.0.0:9002`; always use the actual persisted listener address. The Mixed listener is already enabled on a clean backend installation.
 
 ## Fields and requirements
 
@@ -44,7 +44,7 @@ The example is explanatory. Adjust listen addresses, credentials and interface p
 
 ## Important limits and troubleshooting
 
-- The default Local preset binds only loopback; LAN binds all interfaces and needs firewall/authentication.
+- The backend first-run Mixed listener and React's new Local preset bind to loopback. A new LAN preset binds to all IPv4 interfaces and needs firewall/authentication.
 - An outbound does not have a `mixed` protocol variant. Configure a specific remote HTTP or SOCKS5 outbound instead.
 - The application must actually be configured to use this listener.
 

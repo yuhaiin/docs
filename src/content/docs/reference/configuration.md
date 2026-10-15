@@ -41,7 +41,7 @@ The current inbound contract has four structural fields besides its identifier a
   "enabled": true,
   "network": {
     "type": "tcp_udp",
-    "tcp_udp": { "host": "127.0.0.1:9002", "udp": "enabled" }
+    "tcp_udp": { "host": "127.0.0.1:1080", "udp": "enabled" }
   },
   "transports": [],
   "protocol": {
@@ -74,3 +74,9 @@ The object above is a **field-oriented illustration**, not a recommended configu
 ## Why examples may differ between versions
 
 The Web UI's generated clients and the Go backend must agree about field names and variants. If you use a separately hosted frontend, verify it was built for the backend version you are running. API clients should consult the current tagged contract definitions rather than relying on copied JSON from a previous release.
+
+## Default configuration versus editor presets
+
+The initial backend configuration and UI templates are **not identical**. The backend's [`DefaultSetting`](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/legacy/schema/config/default.go) starts with a `mixed` inbound at `127.0.0.1:1080`. The frontend's [`presetInbound`](https://github.com/yuhaiin/yuhaiin-react/blob/main/src/docs/inbound/presets.ts) proposes `127.0.0.1:9002` **only when adding a new Local preset**. The JSON example above describes the **first-run backend listener**, not the new-preset template.
+
+For developers: persisted inbounds are typed entries in `inbounds_v2`; [`SqliteDB`](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/legacy/chore/sqlite_db.go) handles initialization/migration, [`pkg/store/inbound.go`](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/store/inbound.go) handles persistence, and [`pkg/inbound/contract_store.go`](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/inbound/contract_store.go) applies the desired state to the runtime. Treat configuration and running listener status as separate data.

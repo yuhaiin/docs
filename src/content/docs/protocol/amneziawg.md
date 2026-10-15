@@ -65,3 +65,23 @@ The following is a **template**, not a working server account. Replace every hos
 ## Where to go next
 
 Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/amneziawg/README.md). Avoid sharing saved credentials or full node exports in public support requests.
+
+## What differs from ordinary WireGuard
+
+AmneziaWG uses WireGuard-like keys, local address prefixes, and peers, but adds wire-format obfuscation parameters. Merely copying a WireGuard public/private key pair is not enough if the server expects particular headers, packet padding or other Amnezia settings.
+
+Yuhaiin's [AmneziaWG implementation](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/amneziawg/README.md) uses the official `amneziawg-go` userspace engine. The configuration includes `jc`, `jmin`, `jmax`, `s1` to `s4`, `h1` to `h4`, `i1` to `i5` and optional additional obfuscation values. Obtain the actual settings from the peer's server profile; do not treat the numbers in this article's example as broadly compatible defaults.
+
+## Advanced: diagnosing compatibility
+
+Check in this order:
+
+1. **Outer UDP:** can the client reach the server endpoint at all?
+2. **Identity:** do the server and client contain one another's expected peer public keys?
+3. **Local addresses and allowed IPs:** are the inner addresses and intended destination ranges consistent?
+4. **Obfuscation:** do both ends agree on every configured Amnezia parameter?
+5. **Routing:** has Yuhaiin selected this outbound for the application request?
+
+The top-level `endpoint` remains the **local tunnel prefix list**, not the network hostname. The peer's `endpoint` specifies the **remote address**. This distinction is shared with the [WireGuard guide](/documents/protocol/wireguard/).
+
+For developers, validate serialization against [`AmneziaWG`](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go), not against a third-party config-file key spelling. AmneziaWG does not install an OS TUN by itself.

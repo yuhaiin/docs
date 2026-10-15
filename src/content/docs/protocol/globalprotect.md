@@ -54,3 +54,24 @@ The following is a **template**, not a working server account. Replace every hos
 ## Where to go next
 
 Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/globalprotect/README.md). Avoid sharing saved credentials or full node exports in public support requests.
+
+## Gateway login and transport selection
+
+The current client talks directly to a **gateway**, not a portal. It authenticates using username/password, requests gateway configuration, then establishes an SSL tunnel. The optional `use_esp` flag asks the client to try ESP over UDP; SSL remains a supported fallback.
+
+The active gateway's extra information may report `data_transport` as `ssl` or `esp`. Treat this as **runtime information**: setting `use_esp: true` does not guarantee the network or gateway negotiated an ESP data path.
+
+## Advanced: what the gateway provides but Yuhaiin does not apply
+
+A connected gateway may expose assigned addresses, DNS servers, routes or LAN policy. The current outbound does **not** install these as host-wide routes, replace Yuhaiin resolver roles, or enforce gateway-provided split-tunnel policy. If an intranet website fails after successful login, compare:
+
+1. Was a route targeting the GlobalProtect node actually applied?
+2. Is the corporate hostname resolved with the correct resolver?
+3. Is the target address reachable through the tunnel?
+4. Does the gateway enforce HIP, SAML/SSO or client certificates that this client does not implement?
+
+The current [GlobalProtect implementation README](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/globalprotect/README.md) explicitly labels this outbound experimental. Mock gateway tests and OpenConnect-inspired compatibility tests are useful protocol evidence, **not** proof of interoperability with every PAN-OS gateway. Do not promise enterprise VPN replacement without testing the actual authorized gateway.
+
+## Reconnect is not a transparent socket migration
+
+Established SSL sessions may be replaced when their lifetime expires, when keepalive/DPD fails, or when the gateway drops transport. Automatic reconnect may require a fresh login and will stop on rejected or interactive authentication. If a login is rejected, correct the credentials or required authentication flow before retrying; repeated connection attempts will not resolve a missing SSO/HIP feature.

@@ -56,3 +56,32 @@ The following is a **template**, not a working server account. Replace every hos
 ## Where to go next
 
 Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/openvpn/README.md). Avoid sharing saved credentials or full node exports in public support requests.
+
+## Translate a provider profile into supported fields
+
+Yuhaiin's OpenVPN outbound is a **native client**, not a wrapper around the OpenVPN CLI. It does not accept an `.ovpn` file directly. Review the profile's directives and enter supported values in the node editor:
+
+| Profile information | Yuhaiin field or behavior |
+| --- | --- |
+| `remote host port` | `gateway` includes hostname and port, e.g. `vpn.example.com:1194` |
+| `proto udp` or `proto tcp` | `network`, either `udp` or `tcp` |
+| `ca` | PEM contents in `ca_cert_pem`, or validated system roots |
+| `cert` / `key` | `client_cert_pem` and `client_key_pem` if the server requires certificates |
+| User/password login | `username` and `password` |
+| `tls-auth` / `tls-crypt` | `tls_auth_key` **or** `tls_crypt_key`, never both |
+| `key-direction` | `key_direction`: 0 or 1, matching the profile |
+| `data-ciphers` | `data_ciphers` (AEAD suites supported by the client) |
+
+Do not blindly copy directives such as `script-security`, route-update hooks or compression: they are not generic node settings. The backend explicitly does not execute scripts or install server-pushed routes.
+
+## Advanced: handshake, rekey and reconnect
+
+The [native implementation notes](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/openvpn/README.md) describe separate failure paths:
+
+- **TLS/authentication failure:** validate the CA/server identity, credentials and static-key direction. Avoid disabling verification.
+- **Data channel cipher mismatch:** inspect the offered `data_ciphers` and the server's selected AEAD suite.
+- **Soft rekey:** a successful negotiated rekey can retain established application sockets.
+- **Full reconnect:** `auto_reconnect` recreates the tunnel after eligible failures, but existing application sockets are not migrated.
+- **Remote network works but internal hostnames fail:** server-pushed DNS and routes are available as information, but Yuhaiin's own routing and resolver roles must be configured separately.
+
+The source's documented interoperability runner starts a stock OpenVPN server in Podman or Docker. The **server** needs elevated network permissions; Yuhaiin's Go client does not. Use the source's test matrix to distinguish unit tests from actual gateway compatibility.

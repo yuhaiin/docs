@@ -17,7 +17,7 @@ export default defineConfig({
       editLink: { baseUrl: 'https://github.com/yuhaiin/docs/edit/main/' },
       social: [{ icon: 'github', label: 'Yuhaiin on GitHub', href: 'https://github.com/yuhaiin/yuhaiin' }],
       sidebar: [
-        { label: 'Get started', items: [
+        { label: 'Start here', items: [
           { slug: 'guides' },
           { slug: 'guides/webui-basics' },
           { slug: 'guides/install' },
@@ -25,16 +25,18 @@ export default defineConfig({
           { slug: 'guides/macos' },
           { slug: 'guides/linux' },
           { slug: 'guides/first-connection' },
+          { slug: 'guides/android' },
+          { slug: 'guides/faq' },
+          { slug: 'guides/glossary' },
+        ] },
+        { label: 'Practical workflows', items: [
+          { slug: 'guides/local-proxy' },
           { slug: 'guides/subscription' },
           { slug: 'guides/selective-routing' },
-          { slug: 'guides/local-proxy' },
-          { slug: 'guides/android' },
           { slug: 'guides/tun' },
           { slug: 'guides/troubleshooting' },
           { slug: 'guides/dns-troubleshooting' },
           { slug: 'guides/recover-network' },
-          { slug: 'guides/faq' },
-          { slug: 'guides/glossary' },
           { slug: 'guides/security' },
         ] },
         { label: 'Using the Web UI', items: [
@@ -52,7 +54,8 @@ export default defineConfig({
           { slug: 'features/backup' },
           { slug: 'features/settings' },
         ] },
-        { label: 'Technical reference', items: [
+        { label: 'Advanced and developers', items: [
+          { slug: 'reference/developer-guide' },
           { slug: 'reference/architecture' },
           { slug: 'reference/advanced-inbounds' },
           { slug: 'reference/compatibility' },

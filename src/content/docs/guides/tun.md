@@ -38,3 +38,37 @@ If enabling TUN makes the network stop working:
 5. Compare **TUN**, **Route**, **DNS**, and **Routed HTTPS** checks in diagnostics.
 
 See the backend's [TUN route design notes](https://github.com/yuhaiin/yuhaiin/blob/main/docs/tun-auto-fakeip-route.md) and [Troubleshooting](/documents/guides/troubleshooting/).
+
+## Separate four different address spaces
+
+A TUN setup involves several addresses that should not be mixed up:
+
+| Address | Purpose |
+| --- | --- |
+| TUN interface address, for example `172.19.0.1/30` in the React preset | Local virtual network interface |
+| TUN route, for example `0.0.0.0/0` | Which destinations the OS sends to the interface |
+| FakeIP pool, such as `198.18.0.0/16` | Synthetic DNS results, mapped to hostnames inside Yuhaiin |
+| Remote proxy or VPN server address | Real upstream endpoint that **must remain reachable** |
+
+The [React new TUN preset](https://github.com/yuhaiin/yuhaiin-react/blob/main/src/docs/inbound/presets.ts) currently proposes MTU `1500`, portal `172.19.0.1/30`, IPv6 portal `fdfe:dcba:9876::1/126` and a default IPv4 route. These are **editor template values**, not promises about your existing persisted TUN or platform-specific route installation.
+
+## Advanced: avoid capture loops
+
+If the operating system sends the traffic used to connect to your upstream proxy **back through the same TUN**, the connection may loop. Inspect existing routes and exclusions before enabling a catch-all route. A proxy's outer socket, local management UI, LAN traffic and DNS bootstrap may require different handling.
+
+A TUN interface and a system proxy solve different problems. TUN processes IP packets from the OS route path; a system proxy only affects clients respecting the proxy configuration. **Do not enable both blindly**, particularly if another VPN or network-filtering program is active.
+
+## Advanced: settings and runtime behavior
+
+The [TUN protocol contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/inbound/types.go) includes `name`, `mtu`, `portal`, `portalV6`, `routes`, `excludes`, `autoFakeIpRoute`, `forceFakeIp` and optional `postUp`/`postDown` commands. Their actual effect depends on the host platform and whether Yuhaiin or another app owns the underlying TUN device.
+
+The frontend initializes `autoFakeIpRoute` for **new** TUN presets but does not force it on for existing saved settings. During debugging, inspect the persisted inbound and its runtime events; do not infer effective routes from UI defaults alone.
+
+### Debugging in order
+
+1. Confirm the TUN inbound is running and that your OS created the virtual interface.
+2. Check that OS routes actually point the intended traffic into the interface.
+3. Verify that the remote server's outer connection is not captured in a loop.
+4. Check DNS and FakeIP mapping independently.
+5. Compare **TUN**, **Route** and **Routed HTTPS** diagnostics with a real app request. A registered TUN does not prove that every OS route is installed correctly.
+6. Disable the inbound before removing or reverting routes during recovery.

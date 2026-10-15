@@ -19,11 +19,11 @@ Open `http://127.0.0.1:50051` on the same device. To keep configuration in a spe
 ## Route a single app
 
 1. Create a Direct or proxy node and select it in **Home**.
-2. Configure and enable a Local Mixed inbound, normally `127.0.0.1:9002`.
+2. Confirm the already-enabled **mixed** inbound listens on `127.0.0.1:1080` on a fresh installation. If you have edited or migrated the configuration, use the address shown under **Traffic entry → Inbounds**.
 3. Run a simple request through that inbound:
 
    ```sh frame="none"
-   curl --proxy http://127.0.0.1:9002 https://example.com/
+   curl --proxy http://127.0.0.1:1080 https://example.com/
    ```
 
 4. Open **Monitoring → Connections**. If the request succeeds and a connection appears, the application-to-Yuhaiin path works.

@@ -58,3 +58,23 @@ The following is a **template**, not a working server account. Replace every hos
 ## Where to go next
 
 Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/docs/hysteria2.md). Avoid sharing saved credentials or full node exports in public support requests.
+
+## Bandwidth and hopping: exact field units
+
+The [Go node contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go) uses `upload_bps` and `download_bps` in **bytes per second**, not bits per second. Zero selects automatic congestion control rather than a hard zero-throughput limit. If a provider gives bit/s rates, convert units before entering an API payload; check the Web UI's own units rather than assuming they are the same.
+
+The client can also use `hop_addresses` and optional `hop_interval_seconds`, `min_hop_interval_seconds` and `max_hop_interval_seconds`. These intervals are **seconds**; zero selects the implementation default of 30 seconds. Fixed and random hopping intervals cannot be configured together, and the contract requires a minimum of five seconds.
+
+Port/address hopping is not a magic connectivity fix. First confirm the base `host` can authenticate over UDP and validate TLS, then add the hopping settings expected by the server.
+
+## Advanced: distinguish transport failure from authentication
+
+| Symptom | Inspect first |
+| --- | --- |
+| UDP packets never reach the server | Local firewall, provider UDP endpoint, intermediate proxy capabilities |
+| QUIC/TLS handshake fails | TLS identity, server name, certificate chain and network path |
+| QUIC connects but requests are rejected | Hysteria authentication token and server policy |
+| Only hopping fails | Base endpoint first; interval and address/port pool second |
+| Small requests work; large transfers fail | MTU/path changes and negotiated congestion control |
+
+The server-side **Hysteria 2 inbound** is a separate typed configuration from the client outbound. Do not copy outbound fields directly into an inbound object. Refer to the [inbound contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/inbound/types.go) and [Advanced inbounds](/documents/reference/advanced-inbounds/) for listener/TLS requirements.

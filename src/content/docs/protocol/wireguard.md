@@ -63,3 +63,26 @@ The following is a **template**, not a working server account. Replace every hos
 ## Where to go next
 
 Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go). Avoid sharing saved credentials or full node exports in public support requests.
+
+## Understand the two different endpoints
+
+WireGuard node configuration uses `endpoint` in **two places**, and they have different meanings:
+
+| Field | Meaning |
+| --- | --- |
+| `wireguard.endpoint` | An array of **local tunnel address prefixes**, e.g. `10.8.0.2/32` |
+| `wireguard.peers[].endpoint` | **Remote UDP server** address, e.g. `vpn.example.com:51820` |
+| `wireguard.peers[].allowedIps` | IP prefixes accepted/routed via that peer inside the VPN |
+| `wireguard.peers[].publicKey` | Identity of the remote peer |
+| `wireguard.secretKey` | This client's private key; never publish it |
+| `wireguard.mtu` | Packet size to use inside the encrypted link |
+
+This is an **outbound** used by Yuhaiin's in-process IP stack. It does not, by itself, create a system TUN interface, install a host default route or replace the OS DNS configuration. The separate [TUN guide](/documents/guides/tun/) explains how applications reach Yuhaiin.
+
+## Advanced: a failed handshake versus unreachable destinations
+
+First prove UDP can reach the peer's **outer** endpoint. Then compare the server's configured peer public key, address assignment and allowed IPs. Finally test an inner destination through the node.
+
+A tunnel can establish without automatically making a particular internal subnet reachable. Inspect the peer's allowed IPs, the destination route selected by Yuhaiin and the DNS answer for the target hostname. If an application never reaches the inbound, changing WireGuard keys or MTU cannot fix it.
+
+The node contract defines `Wireguard` and `WireguardPeer` separately in [`pkg/contract/node/types.go`](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/node/types.go). Notice the spelling: `allowedIps` and `keepAlive` use camelCase in the JSON shape. Do not copy a conventional wg-quick configuration verbatim into these JSON fields.
