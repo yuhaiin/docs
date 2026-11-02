@@ -11,7 +11,7 @@ Yuhaiin has two jobs: a backend that processes network connections and a Web UI 
 | --- | --- |
 | **Home** | Setup checklist and current default destination |
 | **Destinations → Nodes** | Configure individual outbound connections |
-| **Destinations → Selectors** | Give a reusable name to a node choice |
+| **Destinations → Selectors** | Choose nodes manually or using automatic policies |
 | **Destinations → Subscriptions** | Import and update provider profiles |
 | **Destinations → Publish** | Make selected node profiles available to other clients |
 | **Destinations → Active nodes** | Inspect active outbound instances and close one |
@@ -21,6 +21,10 @@ Yuhaiin has two jobs: a backend that processes network connections and a Web UI 
 | **Traffic entry → Inbounds** | Choose which applications send traffic to Yuhaiin |
 | **DNS** | Resolvers, DNS roles, DNS server/FakeIP, Hosts and cache |
 | **Diagnostics** | Network checks, logs and performance profiling |
+| **HTTP Gateway** | Reverse proxy applications and apply HTTP request rules |
+| **Traffic Control** | Configure bandwidth profiles and resource diagnostics |
+| **Account & security** | Manage accounts, credentials, usage and administrative policies |
+| **Certificates** | Issue and renew ACME HTTPS site certificates |
 | **Settings** | Backend configuration, Web UI preferences and backups |
 
 The Web UI includes **Monitoring → Connections**, **History**, **Failed history**, and **Blocked history** to observe real traffic.

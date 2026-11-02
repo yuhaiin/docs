@@ -51,3 +51,7 @@ Transparent redirection and TUN may require system routes, firewall rules or ele
 The JSON above matches the **backend's initial `mixed` listener** (`127.0.0.1:1080`). A newly created **Local** preset in the React UI uses `127.0.0.1:9002`. Neither is a universal port: users can edit and persist the bind address, or fail to bind the requested port.
 
 When debugging startup, trace [`DefaultSetting`](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/legacy/schema/config/default.go) → [`SqliteDB` import/migration](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/legacy/chore/sqlite_db.go) → [`InboundStore`](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/store/inbound.go) → [`ContractStore.Sync()`](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/inbound/contract_store.go). A successful schema validation does not prove a socket was bound; inspect the runtime events and listener status.
+
+## Experimental SSH sessions
+
+[Linux SSH inbound](/documents/protocol/ssh/) runs trusted shell/exec commands with per-SSH-transport isolated networking. It requires Linux namespace/TUN privileges and explicit unsafe-shell acknowledgement. Filesystem/process isolation and management identity integration are outside its current scope.

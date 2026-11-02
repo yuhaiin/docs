@@ -42,3 +42,9 @@ The React client separates the saved model from runtime inspection: [`listInboun
 The [`Inbound` contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/contract/inbound/types.go) separates `network` (where packets arrive), `transports` (optional wire framing), and `protocol` (how a client request is interpreted). For Mixed over TCP/UDP, `network.type` is `tcp_udp`, `network.tcp_udp.host` is the bind address, and `protocol.type` is `mixed`.
 
 Binding to `127.0.0.1` confines access to the local host. Binding to `0.0.0.0` accepts connections on all IPv4 interfaces; without authentication and firewall restrictions, this can become an open proxy. See [Local vs LAN](/documents/guides/local-proxy/) and [Advanced inbounds](/documents/reference/advanced-inbounds/).
+
+## Authenticate individual users
+
+Supported HTTP, SOCKS5, Mixed, Yuubinsya, Hysteria2 and SSTP listeners can explicitly accept per-user traffic credentials. See [Credentials](/documents/features/credentials/) for user-only, mixed and legacy modes, then [Traffic Access](/documents/features/traffic-access/) for destination authorization. TUN and other protocols cannot infer a user identity from an address alone.
+
+For Linux-only public-key SSH sessions with isolated networking, see [experimental SSH inbound](/documents/protocol/ssh/). It uses its own identity and is not a general security sandbox.

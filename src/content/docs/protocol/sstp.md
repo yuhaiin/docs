@@ -1,9 +1,9 @@
 ---
 title: "SSTP"
-description: "VPN outbound: configuration fields, example, limits and testing."
+description: "Configure an SSTP outbound or rootless authenticated SSTP server."
 ---
 
-SSTP carries PPP over a TLS connection and uses MS-CHAPv2 authentication. In Yuhaiin it is an outbound node backed by the userspace IP stack.
+SSTP carries PPP over a TLS connection and uses MS-CHAPv2 authentication. Yuhaiin supports an outbound node and a rootless authenticated inbound, both backed by the userspace IP stack.
 
 ## Before you configure
 
@@ -51,3 +51,7 @@ The following is a **template**, not a working server account. Replace every hos
 ## Where to go next
 
 Check the [outbound node tutorial](/documents/features/nodes/) and [network diagnostics](/documents/features/diagnostics/). For exact fields, behavior and test coverage see the [backend source](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/sstp/README.md). Avoid sharing saved credentials or full node exports in public support requests.
+
+## SSTP inbound
+
+The server also supports rootless SSTP entry with independent user/device credentials. Each client has an in-memory lightweight stack; no host TUN or route installation is needed. SSTP must terminate its own TLS for crypto binding, so an external proxy must use TCP/TLS passthrough. This inbound currently supports IPv4, not IPv6 or Ethernet bridging. Create or rotate the device secret so its SSTP verifier exists, permit its owner on the inbound, and use the login name plus that secret for MS-CHAPv2. A management login password is not a proxy credential. See [Inbound credentials](/documents/features/credentials/) and the [backend SSTP server guide](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/net/proxy/sstp/SERVER.md).

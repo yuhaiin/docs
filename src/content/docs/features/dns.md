@@ -5,7 +5,7 @@ description: Choose resolvers, manage DNS roles, FakeIP, hosts and cache.
 
 DNS turns a domain such as `example.com` into an IP address. Yuhaiin can use different resolvers for direct and proxied traffic.
 
-Open **DNS** under traffic configuration. The current Web UI has **Resolvers**, **Resolver roles**, **DNS server**, **Hosts** and **DNS cache** sections.
+Open **DNS** under traffic configuration. The current Web UI has **Resolvers**, **Resolver roles**, **DNS server**, **Hosts**, **Custom replies** and **DNS cache** sections.
 
 ## Resolvers
 
@@ -63,3 +63,11 @@ Yuhaiin exposes [resolver contracts](https://github.com/yuhaiin/yuhaiin/blob/mai
 An encrypted DNS transport protects a query between Yuhaiin and its upstream; it does **not** imply that every application uses that resolver, or that traffic cannot leave by a direct route. Verify capture at the inbound and the actual route before making privacy claims.
 
 For developer debugging, [`src/api/resolvers.ts`](https://github.com/yuhaiin/yuhaiin-react/blob/main/src/api/resolvers.ts) exposes resolver test and cache operations, and [`src/docs/bypass/resolver/roles.tsx`](https://github.com/yuhaiin/yuhaiin-react/blob/main/src/docs/bypass/resolver/roles.tsx) performs a route-config save followed by Apply.
+
+## Custom replies
+
+**DNS → Custom replies** defines ordered replies by question name and type before FakeIP, Hosts and routed upstream resolution. The first matching name/type pair wins. Exact names match only themselves; `*.example.com` matches subdomains but excludes the apex, and `*` matches all names.
+
+Choose the record type, response code, TTL and answer records. For example, an exact `test.example.com` A rule can return `192.0.2.1` for a local test. An empty **NOERROR** answer means no records of that type; **NXDOMAIN** means the name does not exist and clients may cache it across types. TTL zero requests no caching.
+
+Save validates the rules and atomically replaces the active snapshot; invalid edits leave the previous rules intact. An empty list clears custom replies. These rules change DNS answers, not connection destinations, and do not create reverse/FakeIP mappings. See [backend custom reply semantics](https://github.com/yuhaiin/yuhaiin/blob/main/docs/dns-responses.md).

@@ -25,3 +25,9 @@ Choose a **Local** inbound instead of a **LAN** inbound for one computer. LAN ac
 Using **Direct** does not hide your public IP. Using an HTTP/SOCKS application proxy does not force all apps through it. DNS may follow separate resolver policies. A VPN or proxy provider can observe some connection metadata and must be trusted.
 
 A successful Yuhaiin connection is not a guarantee of anonymity. For connection failures, use [Troubleshooting](/documents/guides/troubleshooting/) rather than disabling security checks at random.
+
+## Manage identities and policies
+
+Complete [administrator enrollment](/documents/features/account-security/) using the initialization code from local startup logs. Use separate [device proxy credentials](/documents/features/credentials/), select user-only inbound authentication for protected services, and configure [Traffic Access](/documents/features/traffic-access/) for destination restrictions. Management roles and traffic groups have separate purposes.
+
+For recovery, preserve a [full encrypted archive](/documents/features/backup/) and its external private key. An ordinary configuration snapshot does not include private management identities. Review [secret masking and changes](/documents/features/configuration-changes/) before copying or exporting saved resources.

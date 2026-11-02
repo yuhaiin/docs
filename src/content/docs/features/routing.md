@@ -25,7 +25,7 @@ Create a domain or host match and choose **Block**. Use the **Blocked** connecti
 
 ## Conditions and ordering
 
-Rules use expressions including **all** (every condition), **any** (one condition), **not**, host list, process list, inbound, network, port and GeoIP. Order matters when more than one rule might match. The Web UI allows priority changes.
+Rules use expressions including **all** (every condition), **any** (one condition), **not**, user, group, credential, host list, process list, inbound, network, port and GeoIP. Order matters when more than one rule might match. The Web UI allows priority changes.
 
 **Saving does not necessarily mean a newly edited routing configuration is already running.** Look for the **Apply** operation and activation status; inspect apply errors if the saved and applied revisions differ.
 
@@ -44,7 +44,7 @@ Suppose a browser is already using the local Mixed inbound. You want `example.co
 3. Add a rule named **Direct example.com** with a hostname/list condition matching `example.com`; choose **Direct** as its action.
 4. Put the specific rule above broad rules that would also match.
 5. **Save** the rule and **Apply** routing changes. If Apply fails, the saved rule may not yet be running.
-6. Use **Routing → Test route** twice: once with `example.com), once with a different hostname. Compare each result's action, matched rules and target.
+6. Use **Routing → Test route** twice: once with `example.com`, once with a different hostname. Compare each result's action, matched rules and target.
 7. Send a real request through the inbound and inspect **Monitoring → Connections**. A route test evaluates a supplied hostname; it does not reproduce all information carried by an application connection.
 
 A hostname rule may not match an application that connects to an IP address without usable hostname metadata. DNS/FakeIP or sniffing may change what Yuhaiin knows, so inspect actual connection metadata before modifying the rule.
@@ -68,3 +68,9 @@ The current [route contract](https://github.com/yuhaiin/yuhaiin/blob/main/pkg/co
 | Rule depends on a remote list | List contents might be stale or invalid | Refresh lists and inspect list errors |
 
 For developers, the frontend implements these operations in [`src/api/route.ts`](https://github.com/yuhaiin/yuhaiin-react/blob/main/src/api/route.ts): `getRouteConfig()`, `saveRouteConfig()`, `applyRouteChanges()`, `getRouteActivationStatus()` and `testRule(host)`. The test request takes a **hostname**, not an arbitrary URL with scheme, port and path. See [Developer guide](/documents/reference/developer-guide/) for the RPC transport details.
+
+## Identity, authorization and HTTP handling
+
+User, group and credential conditions can match authenticated traffic identities. Combine conditions deliberately: negating an identity miss can also match anonymous traffic. Use the separate [Traffic Access policy](/documents/features/traffic-access/) to enforce destination permissions.
+
+An HTTP Gateway route action sends captured TCP traffic to a configured [HTTP Gateway](/documents/features/gateway/). For rate limits, bind a QoS profile to the rule in [Traffic Control](/documents/features/traffic-control/).
