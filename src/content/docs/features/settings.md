@@ -26,3 +26,9 @@ The **Configuration** page includes HTTP and SOCKS5 system proxy integration, op
 ## Runtime profiling
 
 The **Enable pprof** setting allows CPU, heap and goroutine captures. Enable only when investigating resource usage. [Profiler instructions](/documents/features/pprof/) explain sessions and the browser graph viewer.
+
+## Accounts, secrets and maintenance
+
+Manage sign-in, permissions and external identity links under [Account & security](/documents/features/account-security/). Saved secret placeholders preserve existing values; explicit reveal and replacement have separate permissions. See [Configuration changes](/documents/features/configuration-changes/).
+
+[Backup and recovery](/documents/features/backup/) distinguishes configuration exports, encrypted full deployment archives and protected software updates. [Certificates](/documents/features/certificates/) manages HTTPS site issuance and renewal.

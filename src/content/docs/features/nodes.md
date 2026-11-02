@@ -77,3 +77,7 @@ These are three different views:
 | **Active nodes** | Runtime outbound instances held open for current or recent traffic |
 
 The frontend [node API](https://github.com/yuhaiin/yuhaiin-react/blob/main/src/api/nodes.ts) reflects this with `listNodes()`, `selectedNodes()` and `activeNodes()`. Terminating an active node closes a runtime instance but does not remove its saved configuration or default selection.
+
+## Automatic policies
+
+Selectors now support failover, latency, throughput, balanced and weighted policies. Existing selectors remain manual until configured. Follow [Automatic outbound selection](/documents/features/selectors/) for candidates, probes, budgets and fallback behavior. Use [upstream credentials](/documents/features/credentials/) to reuse remote authentication across node layers.

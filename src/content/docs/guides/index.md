@@ -31,3 +31,7 @@ A node alone does not automatically redirect traffic from your browser. An inbou
 For your first test, use a local inbound bound to `127.0.0.1`. This listens only on your own computer. You do not need administrator access just to test an HTTP or SOCKS local proxy. Leave advanced DNS, TUN, IPv6 and custom routing alone until the simple case works.
 
 Read the [glossary](/documents/guides/glossary/) when a term is unfamiliar. You can return to the [configuration reference](/documents/reference/configuration/) once the basic setup is running.
+
+## Explore recent capabilities
+
+See [Recent capabilities](/documents/guides/recent-features/) for account security, user traffic policies, automatic selection, encrypted recovery and managed certificates.
